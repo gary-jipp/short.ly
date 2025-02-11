@@ -12,7 +12,15 @@ interface ConfirmDialogProps {
 
 const ConfirmDialog: React.FC<ConfirmDialogProps> = function(props) {
 
-  const cancel = function() {
+  // Delegate function.  Stop event from bubbling up
+  const confirm = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    props.onConfirm();
+  };
+
+  // Delegate function. Call parent onCancel
+  const cancel = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
     props.onCancel();
   };
 
@@ -23,12 +31,11 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = function(props) {
         <DialogContent>{props.content}</DialogContent>
         <DialogActions>
 
-
           <Button onClick={cancel} color="primary">
             {props.cancelText || "Cancel"}
           </Button>
 
-          <Button onClick={props.onConfirm} color="error" autoFocus>
+          <Button onClick={confirm} color="error" autoFocus>
             {props.buttonText || "Are you sure?"}
           </Button>
 

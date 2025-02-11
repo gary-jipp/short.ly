@@ -39,10 +39,6 @@ const HomeRoute: React.FC = function() {
     setMode(ModeType.ADD);
   };
 
-  const deleteRecord = function(record: UrlRecord) {
-    console.log("Delete: ", record);
-  };
-
   return (
     <>
       <AutoBox>
@@ -57,7 +53,7 @@ const HomeRoute: React.FC = function() {
         {mode === ModeType.ADD && <UrlFormNew onCancel={close} />}
 
         {/*  Render Url List */}
-        {mode === ModeType.LIST && <UrlRecordList records={records} onClick={show} onAdd={add} onDelete={deleteRecord} />}
+        {mode === ModeType.LIST && <UrlRecordList records={records} onClick={show} onAdd={add} />}
 
       </AutoBox>
     </>

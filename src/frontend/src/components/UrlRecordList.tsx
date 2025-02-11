@@ -7,18 +7,12 @@ import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for thi
 interface UrlRecordListProps {
   records: UrlRecord[];  // array of UrlRecord objects
   onClick: (record: UrlRecord) => void;
-  onDelete: (record: UrlRecord) => void;
   onAdd: () => void;
 }
 
 const UrlRecordList: React.FC<UrlRecordListProps> = function(props) {
 
-  const deleteRecord = function(record: UrlRecord) {
-    props.onDelete(record);
-  };
-
   return (
-
     <Box sx={{padding: 1}}>
 
       <Box sx={{padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
@@ -35,7 +29,7 @@ const UrlRecordList: React.FC<UrlRecordListProps> = function(props) {
         {props.records.map((record, index) => (
 
           <Fragment key={index}>
-            <UrlRecordListItem record={record} onClick={props.onClick} onDelete={deleteRecord} />
+            <UrlRecordListItem record={record} onClick={props.onClick} />
             {index < props.records.length - 1 && <Divider />}
           </Fragment>
 
