@@ -70,7 +70,7 @@ const UrlFormNew: React.FC<UrlFormNewProps> = function(props) {
       {/* Show error if something went wrong */}
       {error && <ShortUrl shortUrl={shortUrl} mode={"error"} title={`Error! ${error}`} />}
 
-      {success && <ShortUrl shortUrl={shortUrl} mode={"success"} title="Sucess!  Here's your new Short URL:" />}
+      {success && <ShortUrl shortUrl={shortUrl} mode={"success"} title="Success!  Here's your new Short URL:" />}
 
       {/* Close button to dismiss the modal */}
       <Button variant="outlined" color="primary" fullWidth onClick={props.onCancel} sx={{mt: 2}}>
