@@ -1,13 +1,15 @@
 import {List, Box, Divider, Typography, IconButton} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import RecordListItem from '../RecordListItem';
-import {UrlRecord} from "../RecordList/RecordList.types"; // Should use @types for this
+import UrlRecordListItem from '../UrlRecordListItem';
+import {UrlRecord} from "./RecordList.types"; // TODO: Should use @types for this
+import {Fragment} from 'react/jsx-runtime';
 
 interface UrlRecordListProps {
   records: UrlRecord[];  // array of UrlRecord objects
+  onClick: (record: UrlRecord) => void;
 }
 
-const RecordList: React.FC<UrlRecordListProps> = function(props) {
+const UrlRecordList: React.FC<UrlRecordListProps> = function(props) {
 
   // Delegate function in case we want to do more mere
   const onAdd = function(): void {
@@ -30,10 +32,10 @@ const RecordList: React.FC<UrlRecordListProps> = function(props) {
       <List disablePadding sx={{border: '1px solid #ddd', borderRadius: 2}}>
         {props.records.map((record, index) => (
 
-          <>
-            <RecordListItem record={record} />
+          <Fragment key={index}>
+            <UrlRecordListItem record={record} onClick={props.onClick} />
             {index < props.records.length - 1 && <Divider />}
-          </>
+          </Fragment>
 
         ))}
       </List>
@@ -41,4 +43,4 @@ const RecordList: React.FC<UrlRecordListProps> = function(props) {
   );
 };
 
-export default RecordList;
+export default UrlRecordList;

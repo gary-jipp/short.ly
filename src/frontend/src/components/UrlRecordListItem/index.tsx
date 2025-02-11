@@ -2,24 +2,30 @@ import React from "react";
 import {ListItem, Box, ListItemText, Typography, IconButton} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {UrlRecord} from "../RecordList/RecordList.types"; // Should use @types for this
+import {UrlRecord} from "../UrlRecordList/RecordList.types"; // TODO: Should use @types for this
 
-interface RecordListItemProps {
+interface UrlRecordListItemProps {
   record: UrlRecord;
+  onClick: (record: UrlRecord) => void;
 }
 
-const RecordListItem: React.FC<RecordListItemProps> = function(props) {
+const UrlRecordListItem: React.FC<UrlRecordListItemProps> = function(props) {
 
   const onDelete = function() {
   };
   const onEdit = function() {
   };
 
+  // Delegate function in case we want more
+  const onClick = function() {
+    props.onClick(props.record);
+  };
+
   return (
     <>
       <Box sx={{'&:hover': {backgroundColor: 'rgba(0, 0, 0, 0.08)', cursor: 'pointer', }, padding: 1}}>
 
-        <ListItem >
+        <ListItem onClick={onClick}>
           <ListItemText
             primary={
               <>
@@ -52,4 +58,4 @@ const RecordListItem: React.FC<RecordListItemProps> = function(props) {
   );
 };
 
-export default RecordListItem;
+export default UrlRecordListItem;
