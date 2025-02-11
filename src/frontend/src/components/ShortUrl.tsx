@@ -5,7 +5,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 interface UrlRecordEditProps {
   title: string;
   shortUrl: string;
-  added: boolean;
+  mode: "error" | "info" | "success";
 }
 
 const ShortUrl: React.FC<UrlRecordEditProps> = function(props) {
@@ -21,18 +21,21 @@ const ShortUrl: React.FC<UrlRecordEditProps> = function(props) {
 
     <Box sx={{mt: 3}}>
 
-      <Alert severity={props.added ? "success" : "info"}>
+      <Alert severity={props.mode}>
         {props.title}
       </Alert>
 
       <Box sx={{display: "flex", alignItems: "center", mt: 1}}>
+
         <Link href={props.shortUrl} target="_blank" rel="noopener" underline="hover" sx={{fontWeight: "bold"}}            >
           {props.shortUrl}
         </Link>
 
-        <IconButton color="primary" onClick={handleCopy} sx={{ml: 1}}>
-          <ContentCopyIcon />
-        </IconButton>
+        {props.mode != "error" &&
+          <IconButton color="primary" onClick={handleCopy} sx={{ml: 1}}>
+            <ContentCopyIcon />
+          </IconButton>
+        }
 
       </Box>
 

@@ -29,7 +29,7 @@ const HomeRoute: React.FC = function() {
 
   // Show the modal
   const show = function(record: UrlRecord) {
-    setRecord(record);
+    setRecord(record);  // ListItem could also do this using context
     setMode(ModeType.SHOW);
   };
 

@@ -8,7 +8,7 @@ interface UrlRecordsContextType {
   records: UrlRecord[];
   record: UrlRecord | null;
   setRecord: (record: UrlRecord | null) => void;
-  addRecord: (record: UrlRecord) => Promise<void>;
+  addUrlRecord: (record: UrlRecord) => Promise<UrlRecord>;
   updateUrlRecord: (record: UrlRecord) => Promise<void>;
   deleteUrlRecord: (record: UrlRecord) => Promise<void>;
 }
@@ -21,7 +21,7 @@ const defaultContext: UrlRecordsContextType = {
   records: [],
   record: null,
   setRecord: () => { },
-  addRecord: async () => { },
+  addUrlRecord: async () => { },
   updateUrlRecord: async () => { },
   deleteUrlRecord: async () => { },
 };
@@ -42,26 +42,30 @@ const RecordProvider: React.FC<RecordProviderProps> = function(props) {
     setRecords([...mockRecords]);
   }, []);
 
-
-  const addUrlRecord = (newRecord: UrlRecord): Promise<void> => {
+  // Adds a new Url Record and returns the updated record with id & shortUrl
+  const addUrlRecord = (newRecord: UrlRecord): Promise<UrlRecord> => {
     console.log("addUrlRecord - provider");
 
     return Promise.resolve()
       .then(() => {
         setRecords((prev) => [...prev, newRecord]);
+        return {...newRecord, id: 999, shortUrl: "https://short.ly/12321"} as UrlRecord;
       });
   };
 
-  const updateUrlRecord = (newRecord: UrlRecord): Promise<void> => {
+
+  // Adds a new Url Record.  No return
+  const updateUrlRecord = (record: UrlRecord): Promise<void> => {
     console.log("addUrlRecord - provider");
 
     return Promise.resolve()
       .then(() => {
-        setRecords((prev) => [...prev, newRecord]);
+        setRecords((prev) => [...prev, record]);
       });
   };
 
-  const deleteUrlRecord = (targetRecord: UrlRecord): Promise<void> => {
+  // Deletes a Url Record.  No return
+  const deleteUrlRecord = (record: UrlRecord): Promise<void> => {
     console.log("deleteUrlRecord - provider");
 
     // Test errors
@@ -69,12 +73,12 @@ const RecordProvider: React.FC<RecordProviderProps> = function(props) {
 
     return Promise.resolve()
       .then(() => {
-        setRecords((prev) => prev.filter((rec) => rec.id !== targetRecord.id));
+        setRecords((prev) => prev.filter((rec) => rec.id !== record.id));
       });
   };
 
   // This is what our Context Provider provides
-  const value = {records, record, setRecord, addRecord: addUrlRecord, updateUrlRecord, deleteUrlRecord};
+  const value = {records, record, setRecord, addUrlRecord, updateUrlRecord, deleteUrlRecord};
 
   // This is pretty much the same for every Provider
   return (

@@ -19,7 +19,7 @@ const UrlFormShow: React.FC<UrlRecordShowProps> = function(props) {
 
   };
 
-  const handleCopy = () => {
+  const copyToClipboard = () => {
     navigator.clipboard.writeText(shortUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -38,7 +38,7 @@ const UrlFormShow: React.FC<UrlRecordShowProps> = function(props) {
           {shortUrl}
         </Link>
 
-        <IconButton color="primary" onClick={handleCopy} sx={{ml: 1}}>
+        <IconButton color="primary" onClick={copyToClipboard} sx={{ml: 1}}>
           <ContentCopyIcon />
         </IconButton>
         {copied && (<Typography color="success.main">Copied to clipboard!</Typography>)}

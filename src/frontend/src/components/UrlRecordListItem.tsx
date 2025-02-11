@@ -12,9 +12,9 @@ interface UrlRecordListItemProps {
 
 const UrlRecordListItem: React.FC<UrlRecordListItemProps> = function(props) {
   const [showConfirm, setShowConfirm] = useState(false);
-  const [pending, setPending] = useState(false);
-  const [error, setError] = useState("");
-  const {deleteUrlRecord} = useRecords(); // get delete function from Context state
+  const [pending, setPending] = useState(false);  // TODO:  move to context
+  const [error, setError] = useState("");   // TODO:  move to context
+  const {deleteUrlRecord} = useRecords();   // get delete function from Context state
 
   const {record} = props;
 
