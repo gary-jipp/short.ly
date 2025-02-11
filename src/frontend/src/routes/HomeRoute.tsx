@@ -9,8 +9,7 @@ import {useRecords} from '../providers/ApiProvider';
 import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
 
 const HomeRoute: React.FC = function() {
-  const value = useRecords();
-  const records = value.records;
+  const {urlRecords} = useRecords();
 
   const ModeType = {
     LIST: "LIST",
@@ -53,7 +52,7 @@ const HomeRoute: React.FC = function() {
         {mode === ModeType.ADD && <UrlFormNew onCancel={close} />}
 
         {/*  Render Url List */}
-        {mode === ModeType.LIST && <UrlRecordList records={records} onClick={show} onAdd={add} />}
+        {mode === ModeType.LIST && <UrlRecordList records={urlRecords} onClick={show} onAdd={add} />}
 
       </AutoBox>
     </>
