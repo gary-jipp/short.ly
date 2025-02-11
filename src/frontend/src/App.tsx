@@ -4,7 +4,7 @@ import UrlRecordEdit from './components/UrlRecordEdit';
 import records from './stubData';  // Import the stub data
 import {useState} from 'react';
 import {UrlRecord} from './components/UrlRecordList/RecordList.types';
-import ResponsiveBox from './components/AutoBox';
+import AutoBox from './components/AutoBox';
 
 function App() {
   const [modal, setModal] = useState(true);
@@ -20,7 +20,7 @@ function App() {
 
   return (
     <>
-      <ResponsiveBox>
+      <AutoBox>
         <Typography variant="h5" component="h1" gutterBottom>
           URL Shortener
         </Typography>
@@ -31,7 +31,7 @@ function App() {
         {/* Otherwise Render Url List */}
         {!modal && <UrlList records={records} onClick={onClick} />}
 
-      </ResponsiveBox>
+      </AutoBox>
     </>
   );
 }

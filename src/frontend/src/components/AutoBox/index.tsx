@@ -1,15 +1,21 @@
 import Box from '@mui/material/Box';
+import {ReactNode} from 'react';
 
-function ResponsiveBox(props) {
+export interface AutoBoxProps {
+  children?: ReactNode;
+}
+
+const AutoBox: React.FC<AutoBoxProps> = function(props) {
+
   return (
     <Box
       sx={{
         padding: 1,
         width: {
           xs: '100%', // Full width on extra-small screens (phones)
-          sm: '80%',  // 80% width on small screens
-          md: '60%',  // 60% width on medium screens
-          lg: '50%',  // 50% width on large screens
+          sm: '70%',
+          md: '50%',
+          lg: '40%',  // 50% width on large screens
         },
         margin: '0 auto', // Center the box horizontally when it's not full width
       }}
@@ -17,6 +23,6 @@ function ResponsiveBox(props) {
       {props.children}
     </Box>
   );
-}
+};
 
-export default ResponsiveBox;
+export default AutoBox;
