@@ -1,7 +1,7 @@
 import {useState} from "react";
-import {Container, Typography, TextField, Button, Box, Link, IconButton, Alert} from "@mui/material";
+import {Typography, TextField, Button, Box, Link, IconButton, Alert} from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import {UrlRecord} from "../UrlRecordList/RecordList.types"; // TODO: Should use @types for this
+import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
 
 interface UrlRecordEditProps {
   record: UrlRecord | null;

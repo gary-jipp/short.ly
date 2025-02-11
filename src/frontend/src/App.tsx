@@ -1,10 +1,12 @@
-import {Box, Typography} from '@mui/material';
-import UrlList from './components/UrlRecordList';
-import UrlRecordEdit from './components/UrlRecordEdit';
-import records from './stubData';  // Import the stub data
+import {Typography} from '@mui/material';
 import {useState} from 'react';
-import {UrlRecord} from './components/UrlRecordList/RecordList.types';
+
 import AutoBox from './components/AutoBox';
+import UrlRecordList from './components/UrlRecordList';
+import UrlRecordEdit from './components/UrlRecordEdit';
+import {UrlRecord} from "./types/UrlRecord"; // TODO: Should use @types for this
+
+import records from './stubData';  // Import the stub data
 
 function App() {
   const [modal, setModal] = useState(true);
@@ -29,7 +31,7 @@ function App() {
         {modal && <UrlRecordEdit record={record} onClose={toggleModal} />}
 
         {/* Otherwise Render Url List */}
-        {!modal && <UrlList records={records} onClick={onClick} />}
+        {!modal && <UrlRecordList records={records} onClick={onClick} />}
 
       </AutoBox>
     </>

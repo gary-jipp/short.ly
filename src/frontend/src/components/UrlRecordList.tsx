@@ -1,8 +1,8 @@
+import {Fragment} from 'react';
 import {List, Box, Divider, Typography, IconButton} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import UrlRecordListItem from '../UrlRecordListItem';
-import {UrlRecord} from "./RecordList.types"; // TODO: Should use @types for this
-import {Fragment} from 'react/jsx-runtime';
+import UrlRecordListItem from './UrlRecordListItem';
+import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
 
 interface UrlRecordListProps {
   records: UrlRecord[];  // array of UrlRecord objects

@@ -2,7 +2,7 @@ import React from "react";
 import {ListItem, Box, ListItemText, Typography, IconButton} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {UrlRecord} from "../UrlRecordList/RecordList.types"; // TODO: Should use @types for this
+import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
 
 interface UrlRecordListItemProps {
   record: UrlRecord;
