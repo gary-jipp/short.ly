@@ -8,9 +8,9 @@ interface UrlRecordsContextType {
   records: UrlRecord[];
   record: UrlRecord | null;
   setRecord: (record: UrlRecord | null) => void;
-  addRecord: (record: UrlRecord) => void;
-  updateUrlRecord: (record: UrlRecord) => void;
-  deleteUrlRecord: (record: UrlRecord) => void;
+  addRecord: (record: UrlRecord) => Promise<void>;
+  updateUrlRecord: (record: UrlRecord) => Promise<void>;
+  deleteUrlRecord: (record: UrlRecord) => Promise<void>;
 }
 
 export interface RecordProviderProps {
@@ -21,9 +21,9 @@ const defaultContext: UrlRecordsContextType = {
   records: [],
   record: null,
   setRecord: () => { },
-  addRecord: () => { },
-  updateUrlRecord: () => { },
-  deleteUrlRecord: () => { },
+  addRecord: async () => { },
+  updateUrlRecord: async () => { },
+  deleteUrlRecord: async () => { },
 };
 // Create React context to hold our data
 const recordContext = createContext<UrlRecordsContextType>(defaultContext);
@@ -42,27 +42,34 @@ const RecordProvider: React.FC<RecordProviderProps> = function(props) {
     setRecords([...mockRecords]);
   }, []);
 
-  const addUrlRecord = function(record: UrlRecord) {
+
+  const addUrlRecord = (newRecord: UrlRecord): Promise<void> => {
     console.log("addUrlRecord - provider");
 
-    // Stub Save for now
-    setRecords((prev) => [...prev, record]);
+    return Promise.resolve()
+      .then(() => {
+        setRecords((prev) => [...prev, newRecord]);
+      });
   };
 
-  const updateUrlRecord = function(record: UrlRecord) {
-    console.log("updateUrlRecord - provider");
+  const updateUrlRecord = (newRecord: UrlRecord): Promise<void> => {
+    console.log("addUrlRecord - provider");
 
-    // Stub Save for now
-    setRecords((prev) =>
-      prev.map((rec) => (rec.id === record.id ? record : rec))
-    );
+    return Promise.resolve()
+      .then(() => {
+        setRecords((prev) => [...prev, newRecord]);
+      });
   };
 
-  const deleteUrlRecord = function(record: UrlRecord) {
+  const deleteUrlRecord = (targetRecord: UrlRecord): Promise<void> => {
     console.log("deleteUrlRecord - provider");
 
-    // Stub Save for now
-    setRecords((prev) => prev.filter((rec) => rec.id !== record.id));
+    return Promise.reject("Error 12345");
+
+    return Promise.resolve()
+      .then(() => {
+        setRecords((prev) => prev.filter((rec) => rec.id !== targetRecord.id));
+      });
   };
 
   // This is what our Context Provider provides

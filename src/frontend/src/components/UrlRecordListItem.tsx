@@ -12,15 +12,24 @@ interface UrlRecordListItemProps {
 }
 
 const UrlRecordListItem: React.FC<UrlRecordListItemProps> = function(props) {
-  const [showDelete, setShowDelete] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [error, setError] = useState("");
+
   const {deleteUrlRecord} = useRecords(); // get delete function from Context
 
   const {record} = props;
 
+  // Delete using context function
   const deleteRecord = function() {
-    console.log("Delete");
-    deleteUrlRecord(record);
-    setShowDelete(false);
+    deleteUrlRecord(record)
+      .then(() => {
+        console.log("Deleted");
+        setShowConfirm(false);
+      })
+      .catch(err => {
+        console.log(err.message);
+        setError("An error occured deleting this record");
+      });
   };
 
   // Delegate function in case we want to do more here
@@ -50,14 +59,14 @@ const UrlRecordListItem: React.FC<UrlRecordListItemProps> = function(props) {
           />
 
           <Box sx={{display: 'flex', alignItems: 'center'}}>
-            <IconButton edge="end" color="error" onClick={() => setShowDelete(true)}>
+            <IconButton edge="end" color="error" onClick={() => setShowConfirm(true)}>
               <DeleteIcon />
             </IconButton>
           </Box>
         </ListItem>
       </Box>
 
-      <ConfirmDialog show={showDelete} content={record.shortUrl} onConfirm={deleteRecord} onCancel={() => setShowDelete(false)} title="Do you want to delete this URL?" buttonText="Yes, Delete" />
+      <ConfirmDialog show={showConfirm} errorText={error} content={record.shortUrl} onConfirm={deleteRecord} onCancel={() => setShowConfirm(false)} title="Do you want to delete this URL?" buttonText="Yes, Delete" />
     </>
   );
 };
