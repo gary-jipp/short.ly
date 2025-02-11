@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {Typography, TextField, Button, Box, CircularProgress} from "@mui/material";
-import {useRecords} from "../providers/ApiProvider";
+import {useApi} from "../providers/ApiProvider";
 import ShortUrl from "./ShortUrl";
 import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
 
@@ -13,7 +13,7 @@ const UrlFormNew: React.FC<UrlFormNewProps> = function(props) {
   const [shortUrl, setShortUrl] = useState("");
   const [success, setSuccess] = useState(false);
   const [localError, setLocalError] = useState("");           // Locally generated errors
-  const {addUrlRecord, apiPending, apiError} = useRecords(); // API provider
+  const {addUrlRecord, apiPending, apiError} = useApi(); // API provider
 
   const testHandler = function() {
     // setPending(!pending);
@@ -76,6 +76,7 @@ const UrlFormNew: React.FC<UrlFormNewProps> = function(props) {
       <Button variant="outlined" color="primary" fullWidth onClick={props.onCancel} sx={{mt: 2}}>
         Close
       </Button>
+
     </Box>
   );
 };

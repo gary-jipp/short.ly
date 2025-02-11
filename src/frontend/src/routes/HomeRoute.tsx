@@ -5,11 +5,11 @@ import AutoBox from '../components/AutoBox';
 import UrlRecordList from '../components/UrlRecordList';
 import UrlFormNew from '../components/UrlFormNew';
 import UrlFormShow from '../components/UrlFormShow';
-import {useRecords} from '../providers/ApiProvider';
+import {useApi} from '../providers/ApiProvider';
 import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
 
 const HomeRoute: React.FC = function() {
-  const {urlRecords} = useRecords();
+  const {urlRecords} = useApi();
 
   const ModeType = {
     LIST: "LIST",

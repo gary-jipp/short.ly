@@ -3,7 +3,7 @@ import {ListItem, Box, ListItemText, Typography, IconButton, CircularProgress} f
 import DeleteIcon from '@mui/icons-material/Delete';
 import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
 import ConfirmDialog from "./ConfirmDialog";
-import {useRecords} from "../providers/ApiProvider";
+import {useApi} from "../providers/ApiProvider";
 
 interface UrlRecordListItemProps {
   record: UrlRecord;
@@ -14,7 +14,7 @@ const UrlRecordListItem: React.FC<UrlRecordListItemProps> = function(props) {
   const [showConfirm, setShowConfirm] = useState(false);
   const [pending, setPending] = useState(false);  // TODO:  move to context
   const [error, setError] = useState("");   // TODO:  move to context
-  const {deleteUrlRecord} = useRecords();   // get delete function from Context state
+  const {deleteUrlRecord} = useApi();   // get delete function from Context state
 
   const {record} = props;
 

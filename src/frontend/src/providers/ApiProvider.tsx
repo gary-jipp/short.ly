@@ -21,7 +21,7 @@ export interface ApiProviderProps {
 const apiContext = createContext<ApiContextType | undefined>(undefined);
 
 // Custom Hooks for easy access to the Context values object
-export const useRecords = function() {
+export const useApi = function() {
   const context = useContext(apiContext);
   if (!context) {
     throw new Error("useRecords() must be used within a RecordProvider");
