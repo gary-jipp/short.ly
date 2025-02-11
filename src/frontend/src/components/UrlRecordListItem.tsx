@@ -55,7 +55,7 @@ const UrlRecordListItem: React.FC<UrlRecordListItemProps> = function(props) {
         </ListItem>
       </Box>
 
-      <ConfirmDialog show={showDelete} cancelInfo={record.shortUrl} onConfirm={deleteRecord} onCancel={() => setShowDelete(false)} title="Do you want to delete this URL?" buttonText="Yes, Delete" />
+      <ConfirmDialog show={showDelete} content={record.shortUrl} onConfirm={deleteRecord} onCancel={() => setShowDelete(false)} title="Do you want to delete this URL?" buttonText="Yes, Delete" />
     </>
   );
 };

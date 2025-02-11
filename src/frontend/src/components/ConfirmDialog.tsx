@@ -2,10 +2,10 @@ import {Dialog, DialogActions, DialogTitle, Button, DialogContent} from '@mui/ma
 
 interface ConfirmDialogProps {
   title: string;
+  content?: string;
   show: boolean;
   buttonText?: string;
   cancelText?: string;
-  cancelInfo?: string;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -20,7 +20,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = function(props) {
     <>
       <Dialog open={props.show} onClose={cancel}>
         <DialogTitle>{props.title}</DialogTitle>
-        <DialogContent>{props.cancelInfo}</DialogContent>
+        <DialogContent>{props.content}</DialogContent>
         <DialogActions>
 
           <Button onClick={cancel} color="primary">
