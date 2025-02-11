@@ -13,6 +13,7 @@ const UrlRecordListItem: React.FC<UrlRecordListItemProps> = function(props) {
 
   const onDelete = function() {
   };
+
   const onEdit = function() {
   };
 

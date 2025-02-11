@@ -12,12 +12,13 @@ function App() {
   const [modal, setModal] = useState(true);
   const [record, setRecord] = useState<UrlRecord | null>(null);
 
-  const toggleModal = function(): void {
-    setModal(!modal);
+  const close = function(): void {
+    setModal(false);
   };
 
-  const onClick = function(record: UrlRecord) {
+  const open = function(record: UrlRecord) {
     setRecord(record);
+    setModal(true);
   };
 
   return (
@@ -28,10 +29,10 @@ function App() {
         </Typography>
 
         {/* Display Edit Component if set */}
-        {modal && <UrlRecordEdit record={record} onClose={toggleModal} />}
+        {modal && <UrlRecordEdit record={record} onClose={close} />}
 
         {/* Otherwise Render Url List */}
-        {!modal && <UrlRecordList records={records} onClick={onClick} />}
+        {!modal && <UrlRecordList records={records} onClick={open} />}
 
       </AutoBox>
     </>
