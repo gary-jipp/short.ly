@@ -32,7 +32,7 @@ export const useRecords = function() {
 const ApiProvider: React.FC<ApiProviderProps> = function(props) {
   const [urlRecords, setUrlRecords] = useState<UrlRecord[]>([]);
   const [apiPending, setDataPending] = useState(false);
-  const [apiError, setDataError] = useState("");
+  const [apiError, setApiError] = useState("");
 
   // Load data once on Startup
   useEffect(() => {
