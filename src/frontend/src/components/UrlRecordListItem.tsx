@@ -3,6 +3,7 @@ import {ListItem, Box, ListItemText, Typography, IconButton} from '@mui/material
 import DeleteIcon from '@mui/icons-material/Delete';
 import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
 import ConfirmDialog from "./ConfirmDialog";
+import {useRecords} from "../providers/RecordProvider";
 
 interface UrlRecordListItemProps {
   record: UrlRecord;
@@ -12,13 +13,14 @@ interface UrlRecordListItemProps {
 
 const UrlRecordListItem: React.FC<UrlRecordListItemProps> = function(props) {
   const [showDelete, setShowDelete] = useState(false);
+  const {deleteUrlRecord} = useRecords(); // get delete function from Context
+
   const {record} = props;
 
   const deleteRecord = function() {
-    // TODO:  Call delete from Context
-    setShowDelete(false);
     console.log("Delete");
-
+    deleteUrlRecord(record);
+    setShowDelete(false);
   };
 
   // Delegate function in case we want to do more here

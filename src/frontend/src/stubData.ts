@@ -1,5 +1,6 @@
-const records = [
+const mockRecords = [
   {
+    id: 1,
     shortUrl: 'https://short.ly/abc123',
     longUrl: 'https://example.com/foo/bar/biz',
     createdAt: '2025-02-10T12:00:00Z',
@@ -7,6 +8,7 @@ const records = [
     usageCount: 5,
   },
   {
+    id: 2,
     shortUrl: 'https://short.ly/xyz789',
     longUrl: 'https://example.com/baz/qux/quux',
     createdAt: '2025-02-09T14:00:00Z',
@@ -14,6 +16,7 @@ const records = [
     usageCount: 2,
   },
   {
+    id: 3,
     shortUrl: 'https://short.ly/def456',
     longUrl: 'https://example.com/alpha/beta/gamma',
     createdAt: '2025-02-08T10:30:00Z',
@@ -21,6 +24,7 @@ const records = [
     usageCount: 10,
   },
   {
+    id: 4,
     shortUrl: 'https://short.ly/ghi789',
     longUrl: 'https://example.com/omega/epsilon/zeta',
     createdAt: '2025-02-07T09:00:00Z',
@@ -28,6 +32,7 @@ const records = [
     usageCount: 3,
   },
   {
+    id: 5,
     shortUrl: 'https://short.ly/jkl012',
     longUrl: 'https://example.com/delta/theta/iota',
     createdAt: '2025-02-06T16:00:00Z',
@@ -36,4 +41,4 @@ const records = [
   },
 ];
 
-export default records;
+export default mockRecords;
