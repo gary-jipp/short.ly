@@ -4,7 +4,12 @@ import {ReactNode} from 'react';
 export interface AutoBoxProps {
   children?: ReactNode;
 }
-
+/**
+ * Auto Sizing MUI Box container.
+ * @param props only children is used here
+ * @returns
+ * TODO:  add props for size overrides
+ */
 const AutoBox: React.FC<AutoBoxProps> = function(props) {
 
   return (
