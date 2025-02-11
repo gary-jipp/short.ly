@@ -3,40 +3,40 @@ import {useState} from 'react';
 
 import AutoBox from '../components/AutoBox';
 import UrlRecordList from '../components/UrlRecordList';
-import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
-
 import UrlFormNew from '../components/UrlFormNew';
 import UrlFormShow from '../components/UrlFormShow';
 import {useRecords} from '../providers/RecordProvider';
+import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
 
 const HomeRoute: React.FC = function() {
-
   const value = useRecords();
   const records = value.records;
 
-  const LIST = "LIST";
-  const ADD = "ADD";
-  const SHOW = "SHOW";
-  type ModeType = "LIST" | "ADD" | "SHOW";
+  const ModeType = {
+    LIST: "LIST",
+    ADD: "ADD",
+    SHOW: "SHOW",
+  } as const;
+  type ModeType = typeof ModeType[keyof typeof ModeType];
 
-  const [mode, setMode] = useState<ModeType>(LIST);
+  const [mode, setMode] = useState<ModeType>(ModeType.LIST);
   const [record, setRecord] = useState<UrlRecord | null>(null);
 
   // Close the modal to render list
   const close = function(): void {
-    setMode(LIST);
+    setMode(ModeType.LIST);
   };
 
   // Show the modal
   const show = function(record: UrlRecord) {
     setRecord(record);
-    setMode(SHOW);
+    setMode(ModeType.SHOW);
   };
 
   // Show the modal
   const add = function() {
     setRecord(null);
-    setMode(ADD);
+    setMode(ModeType.ADD);
   };
 
   const deleteRecord = function(record: UrlRecord) {
@@ -51,13 +51,13 @@ const HomeRoute: React.FC = function() {
         </Typography>
 
         {/* Render Url Show Component if set */}
-        {mode === SHOW && <UrlFormShow record={record} onClose={close} />}
+        {mode === ModeType.SHOW && <UrlFormShow record={record} onClose={close} />}
 
         {/* Render New URL Form */}
-        {mode === ADD && <UrlFormNew onCancel={close} />}
+        {mode === ModeType.ADD && <UrlFormNew onCancel={close} />}
 
         {/*  Render Url List */}
-        {mode === LIST && <UrlRecordList records={records} onClick={show} onAdd={add} onDelete={deleteRecord} />}
+        {mode === ModeType.LIST && <UrlRecordList records={records} onClick={show} onAdd={add} onDelete={deleteRecord} />}
 
       </AutoBox>
     </>

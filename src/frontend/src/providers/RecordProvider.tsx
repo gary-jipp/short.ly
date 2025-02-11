@@ -31,7 +31,6 @@ export const useRecords = function() {
   return useContext(recordContext);
 };
 
-
 const RecordProvider: React.FC<RecordProviderProps> = function(props) {
   const [records, setRecords] = useState<UrlRecord[]>([]);
   const [record, setRecord] = useState<UrlRecord | null>(null);   // Not the best, but works for now
