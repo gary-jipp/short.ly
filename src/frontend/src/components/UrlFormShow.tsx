@@ -2,7 +2,6 @@ import {useState} from "react";
 import {Typography, TextField, Button, Box, Link, IconButton, CircularProgress, Alert} from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
-import ShortUrl from "./ShortUrl";
 import {useApi} from "../providers/ApiProvider";
 
 interface UrlRecordShowProps {
