@@ -4,7 +4,6 @@ interface ConfirmDialogProps {
   title: string;
   content?: string;
   show: boolean;
-  errorText?: string;
   buttonText?: string;
   cancelText?: string;
   onConfirm: () => void;
@@ -20,27 +19,18 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = function(props) {
   return (
     <>
       <Dialog open={props.show} onClose={cancel}>
-        <DialogTitle>{props.errorText ? props.errorText : props.title}</DialogTitle>
-        <DialogContent>{props.errorText ? props.errorText : props.content}</DialogContent>
+        <DialogTitle>{props.title}</DialogTitle>
+        <DialogContent>{props.content}</DialogContent>
         <DialogActions>
 
-          {props.errorText &&
-            <Button onClick={cancel} color="error">
-              Close
-            </Button>
-          }
 
-          {!props.errorText &&
-            <>
-              <Button onClick={cancel} color="primary">
-                {props.cancelText || "Cancel"}
-              </Button>
+          <Button onClick={cancel} color="primary">
+            {props.cancelText || "Cancel"}
+          </Button>
 
-              <Button onClick={props.onConfirm} color="error" autoFocus>
-                {props.buttonText || "Are you sure?"}
-              </Button>
-            </>
-          }
+          <Button onClick={props.onConfirm} color="error" autoFocus>
+            {props.buttonText || "Are you sure?"}
+          </Button>
 
         </DialogActions>
       </Dialog >

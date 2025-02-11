@@ -65,7 +65,7 @@ const RecordProvider: React.FC<RecordProviderProps> = function(props) {
     console.log("deleteUrlRecord - provider");
 
     // Test errors
-    // return Promise.reject("Error 12345");
+    return Promise.reject("Error 12345");
 
     return Promise.resolve()
       .then(() => {
