@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {ListItem, Box, ListItemText, Typography, IconButton, Dialog, DialogActions, DialogTitle, Button} from '@mui/material';
+import {ListItem, Box, ListItemText, Typography, IconButton} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
 import ConfirmDialog from "./ConfirmDialog";
@@ -21,7 +21,7 @@ const UrlRecordListItem: React.FC<UrlRecordListItemProps> = function(props) {
 
   };
 
-  // Delegate function in case we want more
+  // Delegate function in case we want to do more here
   const onClick = function() {
     props.onClick(record);
   };

@@ -1,4 +1,4 @@
-import {Dialog, DialogActions, DialogTitle, Button, DialogContent, DialogContentText} from '@mui/material';
+import {Dialog, DialogActions, DialogTitle, Button, DialogContent} from '@mui/material';
 
 interface ConfirmDialogProps {
   title: string;
