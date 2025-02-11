@@ -7,12 +7,14 @@ import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for thi
 interface UrlRecordListProps {
   records: UrlRecord[];  // array of UrlRecord objects
   onClick: (record: UrlRecord) => void;
+  onDelete: (record: UrlRecord) => void;
+  onAdd: () => void;
 }
 
 const UrlRecordList: React.FC<UrlRecordListProps> = function(props) {
 
-  // Delegate function in case we want to do more mere
-  const onAdd = function(): void {
+  const deleteRecord = function(record: UrlRecord) {
+    props.onDelete(record);
   };
 
   return (
@@ -24,7 +26,7 @@ const UrlRecordList: React.FC<UrlRecordListProps> = function(props) {
           Your Short URL's
         </Typography>
 
-        <IconButton color="primary" onClick={onAdd}>
+        <IconButton color="primary" onClick={props.onAdd}>
           <AddIcon />
         </IconButton>
       </Box>
@@ -33,7 +35,7 @@ const UrlRecordList: React.FC<UrlRecordListProps> = function(props) {
         {props.records.map((record, index) => (
 
           <Fragment key={index}>
-            <UrlRecordListItem record={record} onClick={props.onClick} />
+            <UrlRecordListItem record={record} onClick={props.onClick} onDelete={deleteRecord} />
             {index < props.records.length - 1 && <Divider />}
           </Fragment>
 
