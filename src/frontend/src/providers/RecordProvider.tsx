@@ -25,8 +25,10 @@ const defaultContext: UrlRecordsContextType = {
   updateUrlRecord: () => { },
   deleteUrlRecord: () => { },
 };
+// Create React context to hold our data
 const recordContext = createContext<UrlRecordsContextType>(defaultContext);
 
+// Custom Hooks for easy access to the Context values
 export const useRecords = function() {
   return useContext(recordContext);
 };
@@ -35,38 +37,43 @@ const RecordProvider: React.FC<RecordProviderProps> = function(props) {
   const [records, setRecords] = useState<UrlRecord[]>([]);
   const [record, setRecord] = useState<UrlRecord | null>(null);   // Not the best, but works for now
 
+  // Load data once on Startup
   useEffect(() => {
     setRecords([...mockRecords]);
   }, []);
 
   const addUrlRecord = function(record: UrlRecord) {
-    // Stub Save for now
     console.log("addUrlRecord - provider");
+
+    // Stub Save for now
     setRecords((prev) => [...prev, record]);
   };
 
   const updateUrlRecord = function(record: UrlRecord) {
     console.log("updateUrlRecord - provider");
+
+    // Stub Save for now
     setRecords((prev) =>
       prev.map((rec) => (rec.id === record.id ? record : rec))
     );
   };
 
   const deleteUrlRecord = function(record: UrlRecord) {
-    // Stub Save for now
     console.log("deleteUrlRecord - provider");
 
+    // Stub Save for now
     setRecords((prev) => prev.filter((rec) => rec.id !== record.id));
   };
 
+  // This is what our Context Provider provides
   const value = {records, record, setRecord, addRecord: addUrlRecord, updateUrlRecord, deleteUrlRecord};
 
+  // This is pretty much the same for every Provider
   return (
     <recordContext.Provider value={value}>
       {props.children}
     </recordContext.Provider>
   );
-
 
 };
 
