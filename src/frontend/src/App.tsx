@@ -1,12 +1,12 @@
-import RecordProvider from './providers/RecordProvider';
+import ApiProvider from './providers/ApiProvider';
 import HomeRoute from './routes/HomeRoute';
 
 function App() {
 
   return (
-    <RecordProvider>
+    <ApiProvider>
       <HomeRoute />
-    </RecordProvider>
+    </ApiProvider>
   );
 }
 

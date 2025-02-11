@@ -4,38 +4,39 @@ import {UrlRecord} from "../types/UrlRecord";
 import mockRecords from '../stubData';  // Import the mock data
 
 // Define the context type
-interface UrlRecordsContextType {
+interface ApiContextType {
   records: UrlRecord[];
   record: UrlRecord | null;
+  apiPending: boolean;
+  apiError: string;
   setRecord: (record: UrlRecord | null) => void;
   addUrlRecord: (record: UrlRecord) => Promise<UrlRecord>;
   updateUrlRecord: (record: UrlRecord) => Promise<void>;
   deleteUrlRecord: (record: UrlRecord) => Promise<void>;
 }
 
-export interface RecordProviderProps {
+export interface ApiProviderProps {
   children?: ReactNode;
 }
 
-const defaultContext: UrlRecordsContextType = {
-  records: [],
-  record: null,
-  setRecord: () => { },
-  addUrlRecord: async () => { },
-  updateUrlRecord: async () => { },
-  deleteUrlRecord: async () => { },
-};
-// Create React context to hold our data
-const recordContext = createContext<UrlRecordsContextType>(defaultContext);
+// Create React context to hold our data. value is undefined if not wrapped
+const apiContext = createContext<ApiContextType | undefined>(undefined);
 
 // Custom Hooks for easy access to the Context values
 export const useRecords = function() {
-  return useContext(recordContext);
+  const context = useContext(apiContext);
+  if (!context) {
+    throw new Error("useRecords() must be used within a RecordProvider");
+  }
+
+  return context;
 };
 
-const RecordProvider: React.FC<RecordProviderProps> = function(props) {
+const ApiProvider: React.FC<ApiProviderProps> = function(props) {
   const [records, setRecords] = useState<UrlRecord[]>([]);
   const [record, setRecord] = useState<UrlRecord | null>(null);   // Not the best, but works for now
+  const [apiPending, setDataPending] = useState(false);
+  const [apiError, setDataError] = useState("");
 
   // Load data once on Startup
   useEffect(() => {
@@ -44,49 +45,54 @@ const RecordProvider: React.FC<RecordProviderProps> = function(props) {
 
   // Adds a new Url Record and returns the updated record with id & shortUrl
   const addUrlRecord = (newRecord: UrlRecord): Promise<UrlRecord> => {
+    setDataPending(true);
     console.log("addUrlRecord - provider");
 
     return Promise.resolve()
       .then(() => {
         setRecords((prev) => [...prev, newRecord]);
+        setDataPending(false);
         return {...newRecord, id: 999, shortUrl: "https://short.ly/12321"} as UrlRecord;
       });
   };
 
-
   // Adds a new Url Record.  No return
   const updateUrlRecord = (record: UrlRecord): Promise<void> => {
+    setDataPending(true);
     console.log("addUrlRecord - provider");
 
     return Promise.resolve()
       .then(() => {
+        setDataPending(false);
         setRecords((prev) => [...prev, record]);
       });
   };
 
   // Deletes a Url Record.  No return
   const deleteUrlRecord = (record: UrlRecord): Promise<void> => {
+    setDataPending(true);
     console.log("deleteUrlRecord - provider");
 
     // Test errors
-    // return Promise.reject("Error 12345");
+    // setDataError("Test Error 12345");
 
     return Promise.resolve()
       .then(() => {
+        setDataPending(false);
         setRecords((prev) => prev.filter((rec) => rec.id !== record.id));
       });
   };
 
   // This is what our Context Provider provides
-  const value = {records, record, setRecord, addUrlRecord, updateUrlRecord, deleteUrlRecord};
+  const value = {records, record, apiPending, apiError, setRecord, addUrlRecord, updateUrlRecord, deleteUrlRecord};
 
   // This is pretty much the same for every Provider
   return (
-    <recordContext.Provider value={value}>
+    <apiContext.Provider value={value}>
       {props.children}
-    </recordContext.Provider>
+    </apiContext.Provider>
   );
 
 };
 
-export default RecordProvider;
+export default ApiProvider;

@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {Typography, TextField, Button, Box, CircularProgress} from "@mui/material";
-import {useRecords} from "../providers/RecordProvider";
+import {useRecords} from "../providers/ApiProvider";
 import ShortUrl from "./ShortUrl";
 import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
 
@@ -12,11 +12,8 @@ const UrlFormNew: React.FC<UrlFormNewProps> = function(props) {
   const [longUrl, setLongUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
   const [success, setSuccess] = useState(false);
-
-  const [pending, setPending] = useState(false);    // TODO: move to context
-  const [error, setError] = useState("");           // TODO:  move to context
-
-  const {addUrlRecord, } = useRecords(); // get delete function from Context state
+  const [localError, setLocalError] = useState("");           // Locally generated errors
+  const {addUrlRecord, apiPending, apiError} = useRecords(); // API provider
 
   const testHandler = function() {
     // setPending(!pending);
@@ -27,31 +24,30 @@ const UrlFormNew: React.FC<UrlFormNewProps> = function(props) {
 
   // Add using context function
   const addRecord = function() {
-    if (!longUrl || longUrl.length < 5) {
-      setError("Your URL is too short");
+    if (longUrl?.length < 6) {
+      setLocalError("Your URL is too short");
+      return setTimeout(() => {   // Clear error message after 3 seconds
+        setLocalError("");
+      }, 2000);
     }
 
     const record: UrlRecord = {longUrl, shortUrl};
-    setPending(true);
 
     addUrlRecord(record)
-      .then((res) => {
-        setShortUrl(urlRecord.shortUrl);
+      .then(res => {
+        setShortUrl(res.shortUrl);
         setSuccess(true);
-        console.log("Added");
       })
       .catch(err => {
         console.log(err);
-        setError(`Unable to Create: ${err.message}`);
         setTimeout(() => {   // Clear error message after 3 seconds
-          setError("");
+          setLocalError("");
         }, 3000);
-      })
-      .finally(() => {
-        setPending(false);
       });
   };
 
+  // API and local errors are treated the same
+  const error = localError || apiError;
 
   return (
     <Box maxWidth="sm" sx={{mt: 4, p: 4, border: "1px solid #ddd", borderRadius: 2}}    >
@@ -63,9 +59,9 @@ const UrlFormNew: React.FC<UrlFormNewProps> = function(props) {
 
 
       {/* Could use a ternary here but harder to read */}
-      {!pending && <Button variant="contained" color="primary" disabled={success || !!error} fullWidth onClick={testHandler}>Shorten</Button>}
+      {!apiPending && <Button variant="contained" color="primary" disabled={success || !!error} fullWidth onClick={addRecord}>Shorten</Button>}
 
-      {pending && <Button variant="contained" fullWidth disabled>
+      {apiPending && <Button variant="contained" fullWidth disabled>
         <CircularProgress size={20} sx={{position: "absolute"}} />
         <span style={{visibility: "hidden"}}>Placeholder</span>
       </Button>

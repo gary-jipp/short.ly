@@ -3,7 +3,7 @@ import {ListItem, Box, ListItemText, Typography, IconButton, CircularProgress} f
 import DeleteIcon from '@mui/icons-material/Delete';
 import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
 import ConfirmDialog from "./ConfirmDialog";
-import {useRecords} from "../providers/RecordProvider";
+import {useRecords} from "../providers/ApiProvider";
 
 interface UrlRecordListItemProps {
   record: UrlRecord;
