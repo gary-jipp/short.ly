@@ -12,6 +12,17 @@ const getBaseUrl = function(req: Request) {
   return `${req.protocol}://${req.get('host')}/`;
 };
 
+const isUrlValid = async function(url: string) {
+  try {
+    const response = await fetch(url, {method: 'GET', mode: 'no-cors'});
+    return response.ok;  // will be true if status code is 2xx
+  } catch (error) {
+    console.error('URL not valid:', url);
+    return false;
+  }
+};
+
+
 // Get Express Router to use for endpoints
 const router = express.Router();
 
@@ -35,14 +46,18 @@ export default function(pool: Pool): Router {  // Type is inferred so not really
 
   router.post("/", async (req, res) => {
     const longUrl = req.body.longUrl;
+    if (!await isUrlValid(longUrl)) {
+      console.log("Not Valid:", longUrl);
+
+      res.status(400).json({error: "invalid"});
+      return;
+    }
 
     let UrlId: string;
     do {
       UrlId = generateShortUrlId(UrlIdLength);
-      console.log("urlId", UrlId);
     } while (await getUrl(UrlId));
 
-    console.log("Add Record");
     try {
       const row = await addUrl(UrlId, longUrl);
       res.json(row);
@@ -55,6 +70,11 @@ export default function(pool: Pool): Router {  // Type is inferred so not really
   router.put("/:id", async (req, res) => {
     const id: number = Number(req.params.id);
     const longUrl = req.body.longUrl;
+
+    if (!await isUrlValid(longUrl)) {
+      res.status(400).json({error: "invalid"});
+      return;
+    }
 
     try {
       const row = await updateUrl(id, longUrl);
