@@ -12,6 +12,7 @@ const getBaseUrl = function(req: Request) {
   return `${req.protocol}://${req.get('host')}/`;
 };
 
+// Check if URL is valid (returns 2xx)
 const isUrlValid = async function(url: string) {
   try {
     const response = await fetch(url, {method: 'GET', mode: 'no-cors'});
@@ -21,7 +22,6 @@ const isUrlValid = async function(url: string) {
     return false;
   }
 };
-
 
 // Get Express Router to use for endpoints
 const router = express.Router();
