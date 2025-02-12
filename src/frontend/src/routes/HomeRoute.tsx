@@ -46,7 +46,7 @@ const HomeRoute: React.FC = function() {
         </Typography>
 
         {/* Render Url Show Component if set */}
-        {mode === ModeType.SHOW && <UrlFormShow record={record} onClose={close} />}
+        {mode === ModeType.SHOW && record !== null && <UrlFormShow record={record} onClose={close} />}
 
         {/* Render New URL Form */}
         {mode === ModeType.ADD && <UrlFormNew onCancel={close} />}

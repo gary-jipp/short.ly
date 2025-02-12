@@ -11,6 +11,10 @@ interface UrlRecordShowProps {
 }
 
 const UrlFormShow: React.FC<UrlRecordShowProps> = function(props) {
+  if (!props.record) {
+    return <Typography color="error">Error: URL record is missing.</Typography>;
+  }
+
   const [longUrl, setUrl] = useState(props.record?.longUrl || "");    // Long Url Text field
   const [shortUrl] = useState(props.record?.shortUrl || "");          // Displayed ShortUrl
   const [update, setUpdate] = useState(false);          // Toggle to allow editing
