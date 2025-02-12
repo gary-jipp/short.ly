@@ -25,7 +25,7 @@ export default function(pool: Pool): Router {  // inferred so not really neccesa
     }
   });
 
-  router.get("/", async (req, res) => {
+  router.get("/", async (_, res) => {
     try {
       const rows = await getUrls();
       res.json(rows);

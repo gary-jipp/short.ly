@@ -4,6 +4,7 @@ interface Url {
   id: number;
   short_url: string;
   long_url: string;
+  usage_count: number;
   created?: string;
 }
 
@@ -18,7 +19,7 @@ interface urlQueries {
 export default function(pool: Pool): urlQueries {
 
   const getUrls = async (): Promise<Url[]> => {
-    const sql = "SELECT id, short_url AS shortUrl, long_url AS longUrl, created FROM urls";
+    const sql = "SELECT id, short_url AS shortUrl, long_url AS longUrl,  usage_count as usageCount, created FROM urls";
 
     const res: QueryResult<Url> = await pool.query(sql);
     return res.rows;

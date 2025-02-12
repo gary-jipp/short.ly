@@ -34,7 +34,7 @@ function default_1(pool) {
             res.json(error);
         }
     }));
-    router.get("/", (req, res) => __awaiter(this, void 0, void 0, function* () {
+    router.get("/", (_, res) => __awaiter(this, void 0, void 0, function* () {
         try {
             const rows = yield getUrls();
             res.json(rows);

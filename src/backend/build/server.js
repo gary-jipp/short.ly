@@ -14,14 +14,14 @@ const port = Number(process.env.API_PORT || 8000);
 app.use(express_1.default.json());
 app.use((0, morgan_1.default)('dev'));
 // Use an Express Router for modularity
-app.use('/api/url', (0, urlRoutes_1.default)(db_1.default));
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}/`);
-});
+app.use('/api/urls', (0, urlRoutes_1.default)(db_1.default));
 // Health check
 app.get("/api/health", (_, res) => {
     res.json({ "status": "healthy" });
 });
 app.use((req, res) => {
     res.status(404).json({ error: "Not Found" });
+});
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}/`);
 });

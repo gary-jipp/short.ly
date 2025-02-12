@@ -13,11 +13,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // Use an Express Router for modularity
-app.use('/api/url', urlRoutes(pool));
-
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}/`);
-});
+app.use('/api/urls', urlRoutes(pool));
 
 // Health check
 app.get("/api/health", (_, res) => {
@@ -26,4 +22,8 @@ app.get("/api/health", (_, res) => {
 
 app.use((req, res) => {
   res.status(404).json({error: "Not Found"});
+});
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}/`);
 });

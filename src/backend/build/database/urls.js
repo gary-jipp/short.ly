@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = default_1;
 function default_1(pool) {
     const getUrls = () => __awaiter(this, void 0, void 0, function* () {
-        const sql = "SELECT id, short_url AS shortUrl, long_url AS longUrl, created FROM urls";
+        const sql = "SELECT id, short_url AS shortUrl, long_url AS longUrl,  usage_count as usageCount, created FROM urls";
         const res = yield pool.query(sql);
         return res.rows;
     });
