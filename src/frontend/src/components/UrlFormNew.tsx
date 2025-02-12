@@ -15,13 +15,6 @@ const UrlFormNew: React.FC<UrlFormNewProps> = function(props) {
   const [localError, setLocalError] = useState("");           // Locally generated errors
   const {addUrlRecord, apiPending, apiError} = useApi(); // API provider
 
-  const testHandler = function() {
-    // setPending(!pending);
-    // setShortUrl("https://short.ly/123178hg");
-    // setSuccess(!success);
-    // setError("`Url is too short");
-  };
-
   // Add using context function
   const addRecord = function() {
     if (longUrl?.length < 6) {
@@ -31,19 +24,12 @@ const UrlFormNew: React.FC<UrlFormNewProps> = function(props) {
       }, 2000);
     }
 
+    // Add record & set shortUrl to enable render
     const record: UrlRecord = {longUrl, shortUrl};
-
     addUrlRecord(record)
       .then(res => {
         setShortUrl(res.shortUrl ? res.shortUrl : "");
         setSuccess(true);
-      })
-
-      .catch(err => {
-        console.log(err);
-        setTimeout(() => {   // Clear error message after 3 seconds
-          setLocalError("");
-        }, 3000);
       });
   };
 

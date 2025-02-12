@@ -34,7 +34,7 @@ const UrlFormShow: React.FC<UrlRecordShowProps> = function(props) {
       }, 2000);
     }
 
-    // Updaye longUrl in record & save
+    // Update longUrl in record & save
     updateUrlRecord({...props.record, longUrl})
       .then(() => {
         setSuccess(true);
