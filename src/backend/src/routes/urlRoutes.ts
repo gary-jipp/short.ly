@@ -59,7 +59,6 @@ export default function(pool: Pool): Router {  // Type is inferred so not really
     try {
       const row = await updateUrl(id, longUrl);
       if (!row) {
-        console.log("Not found: ", id);
         res.status(404).json({error: "Resource not found"});
         return;
       }
@@ -76,7 +75,12 @@ export default function(pool: Pool): Router {  // Type is inferred so not really
 
     try {
       const row = await deleteUrl(id);
-      res.json(row);
+      if (!row) {
+        res.status(404).json({error: "Resource not found"});
+        return;
+      }
+
+      res.status(204).send();
     } catch (error) {
       console.log(error);
       res.json(error);
