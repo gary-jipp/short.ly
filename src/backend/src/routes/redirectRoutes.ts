@@ -1,4 +1,4 @@
-import express, {Router, Request} from "express";
+import express, {Router} from "express";
 import crypto from 'crypto';
 import {Pool} from "pg";
 import urlQueries from '../database/urlQueries';
