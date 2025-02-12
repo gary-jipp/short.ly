@@ -30,8 +30,9 @@ export const useApi = function() {
 
 const ApiProvider: React.FC<ApiProviderProps> = function(props) {
   const [urlRecords, setUrlRecords] = useState<UrlRecord[]>([]);
-  const [apiPending, setApiPending] = useState(false);
-  const [apiError, setApiError] = useState("");
+
+  const [apiPending] = useState(false); // TODO: remove
+  const [apiError] = useState("");  // TODO: renmove
 
   // Load data once on Startup
   useEffect(() => {
@@ -48,7 +49,6 @@ const ApiProvider: React.FC<ApiProviderProps> = function(props) {
 
   // Adds a new Url Record and returns the updated record with id & shortUrl
   const addUrlRecord = (newRecord: UrlRecord): Promise<UrlRecord> => {
-    setApiPending(true);
 
     return axios.post<ApiUrlRecord>("/api/urls", newRecord) // body type is inferred
       .then(res => {
@@ -57,60 +57,37 @@ const ApiProvider: React.FC<ApiProviderProps> = function(props) {
         const record: UrlRecord = {id: rec.id, longUrl: rec.long_url, shortUrl: rec.short_url, usageCount: rec.usage_count};
         setUrlRecords((prev) => [...prev, record]);
         return record;
-      })
-      .catch(err => {
-        console.log("axios.post error: ", err.response?.data);
-        setApiError("Unable to add this URL");
-        return {longUrl: ""} as UrlRecord;  // Won't get used if apiError Set
-        // TODO: re-throw  instead
-      })
-      .finally(() => {
-        setApiPending(false);
       });
   };
 
   // Adds a new Url Record.  No return
   const updateUrlRecord = (record: UrlRecord): Promise<void> => {
-    setApiPending(true);
 
+    // Update and replace object in records array
     return axios.put<UrlRecord>(`/api/urls/${record.id}`, record)
       .then(() => {
-        setUrlRecords((prev) => [...prev, record]);
-      })
-      .catch(err => {
-        console.log("axios.put error: ", err.response?.data);
-        setApiError("Unable to save this record");
-        // TODO: re-throw
-      })
-      .finally(() => {
-        setApiPending(false);
+        setUrlRecords((prev) =>
+          prev.map((rec) => (rec.id === record.id ? record : rec))
+        );
       });
 
   };
 
   // Deletes a Url Record.  Nothing returned
   const deleteUrlRecord = (record: UrlRecord): Promise<void> => {
-    setApiPending(true);
+
     console.log("deleteUrlRecord - provider");
 
     return axios.delete(`/api/urls/${record.id}`)
       .then(() => {
         setUrlRecords((prev) => prev.filter((rec) => rec.id !== record.id));
-      })
-      .catch(err => {
-        console.log("axios.delete error: ", err.response?.data);
-        setApiError("Error deleting this record");
-        // TODO: re-throw
-      })
-      .finally(() => {
-        setApiPending(false);
       });
   };
 
   // This is what our Context Provider provides
   const value = {urlRecords, apiPending, apiError, addUrlRecord, updateUrlRecord, deleteUrlRecord};
 
-  // This is pretty much the same for every Provider
+  // This code is pretty much the same for every Provider
   return (
     <apiContext.Provider value={value}>
       {props.children}

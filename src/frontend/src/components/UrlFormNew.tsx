@@ -3,6 +3,7 @@ import {Typography, TextField, Button, Box, CircularProgress} from "@mui/materia
 import {useApi} from "../providers/ApiProvider";
 import ShortUrl from "./ShortUrl";
 import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
+import useTransientState from "../hooks/useTransientState";
 
 interface UrlFormNewProps {
   onCancel: () => void; // Adding close function to the props
@@ -12,16 +13,17 @@ const UrlFormNew: React.FC<UrlFormNewProps> = function(props) {
   const [longUrl, setLongUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
   const [success, setSuccess] = useState(false);
-  const [localError, setLocalError] = useState("");           // Locally generated errors
-  const {addUrlRecord, apiPending, apiError} = useApi(); // API provider
+
+  const [pending, setPending] = useState<boolean>(false);
+  const [error, setError] = useTransientState<string>("", 2000);
+
+  const {addUrlRecord} = useApi(); // API provider
 
   // Add using context function
   const addRecord = function() {
     if (longUrl?.length < 6) {
-      setLocalError("Your URL is too short");
-      return setTimeout(() => {   // Clear error message after 3 seconds
-        setLocalError("");
-      }, 2000);
+      setError("Your URL is too short");
+      return;
     }
 
     // Add record & set shortUrl to enable render
@@ -30,11 +32,14 @@ const UrlFormNew: React.FC<UrlFormNewProps> = function(props) {
       .then(res => {
         setShortUrl(res.shortUrl ? res.shortUrl : "");
         setSuccess(true);
-      });
+      })
+      .catch(() => {
+        setError("Unable to save this URL");
+      })
+      .finally(() => {
+        setPending(false);
+      });;
   };
-
-  // API and local errors are treated the same
-  const error = localError || apiError;
 
   return (
     <Box maxWidth="sm" sx={{mt: 4, p: 4, border: "1px solid #ddd", borderRadius: 2}}    >
@@ -46,9 +51,9 @@ const UrlFormNew: React.FC<UrlFormNewProps> = function(props) {
 
 
       {/* Could use a ternary here but harder to read */}
-      {!apiPending && <Button variant="contained" color="primary" disabled={success || !!error} fullWidth onClick={addRecord}>Shorten</Button>}
+      {!pending && <Button variant="contained" color="primary" disabled={success || !!error} fullWidth onClick={addRecord}>Shorten</Button>}
 
-      {apiPending && <Button variant="contained" fullWidth disabled>
+      {pending && <Button variant="contained" fullWidth disabled>
         <CircularProgress size={20} sx={{position: "absolute"}} />
         <span style={{visibility: "hidden"}}>Placeholder</span>
       </Button>

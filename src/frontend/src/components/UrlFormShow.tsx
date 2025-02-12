@@ -3,7 +3,7 @@ import {Typography, TextField, Button, Box, Link, IconButton, CircularProgress, 
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
 import {useApi} from "../providers/ApiProvider";
-import useClearable from "../hooks/useClearable";
+import useTransientState from "../hooks/useTransientState";
 
 interface UrlRecordShowProps {
   record: UrlRecord;
@@ -15,14 +15,12 @@ const UrlFormShow: React.FC<UrlRecordShowProps> = function(props) {
   const [shortUrl] = useState(props.record?.shortUrl || "");          // Displayed ShortUrl
   const [update, setUpdate] = useState(false);          // Toggle to allow editing
   const [success, setSuccess] = useState(false);
+  const [pending, setPending] = useState<boolean>(false);
 
-  const {pending, error, copied, setError, setPending, setCopied} = useClearable(2);
+  const [copied, setCopied] = useTransientState<boolean>(false, 2000);
+  const [error, setError] = useTransientState<string>("", 2000);
+
   const {updateUrlRecord} = useApi(); // API provider
-
-
-  const showError = function(message: string) {
-    setError(message);
-  };
 
   // Enable Updating
   const startUpdate = function() {
@@ -34,7 +32,8 @@ const UrlFormShow: React.FC<UrlRecordShowProps> = function(props) {
   // Add using context function
   const saveRecord = function() {
     if (longUrl?.length < 6) {
-      showError("Your URL is too short");
+      setError("Your URL is too short");
+      return;
     }
 
     // Update longUrl in record & save
@@ -43,7 +42,7 @@ const UrlFormShow: React.FC<UrlRecordShowProps> = function(props) {
         setSuccess(true);
       })
       .catch(() => {
-        showError("Unable to save this URL");
+        setError("Unable to save this URL");
       })
       .finally(() => {
         setPending(false);

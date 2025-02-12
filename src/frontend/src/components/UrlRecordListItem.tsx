@@ -4,7 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
 import ConfirmDialog from "./ConfirmDialog";
 import {useApi} from "../providers/ApiProvider";
-import useClearable from "../hooks/useClearable";
+import useTransientState from "../hooks/useTransientState";
 
 interface UrlRecordListItemProps {
   record: UrlRecord;
@@ -13,7 +13,8 @@ interface UrlRecordListItemProps {
 
 const UrlRecordListItem: React.FC<UrlRecordListItemProps> = function(props) {
   const [showConfirm, setShowConfirm] = useState(false);
-  const {pending, error, setError, setPending} = useClearable(2);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useTransientState<string>("", 2000);
   const {deleteUrlRecord} = useApi();   // get delete function from Context state
 
   const {record} = props;
