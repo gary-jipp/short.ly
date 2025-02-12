@@ -17,7 +17,11 @@ const useTransientState = function <T extends TransientValue>(initial: T, durati
 
   const setValue = function(state: T) {
     saveValue(state);
-    setTimeout(() => saveValue(initialValue), duration);  // Reset back to initial after duration
+
+    // clear state after duration.
+    if (state !== initial) {
+      setTimeout(() => saveValue(initialValue), duration);  // Reset back to initial after duration
+    }
   };
 
   return [value, setValue];
