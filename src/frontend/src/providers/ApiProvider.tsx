@@ -50,6 +50,7 @@ const ApiProvider: React.FC<ApiProviderProps> = function(props) {
 
     return axios.post<ApiUrlRecord>("/api/urls", newRecord) // body type is inferred
       .then(res => {
+        // Map api record to local app url record
         const rec = res.data; // type inferred
         const record: UrlRecord = {id: rec.id, longUrl: rec.long_url, shortUrl: rec.short_url, usageCount: rec.usage_count};
         setUrlRecords((prev) => [...prev, record]);
