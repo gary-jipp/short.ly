@@ -31,7 +31,7 @@ export default function(pool: Pool): urlQueries {
   const getUrls = async (baseUrl: string): Promise<UrlRecord[]> => {
 
     // Prepend baseUrl to url_id to get a complete URL
-    const sql = "SELECT id, CONCAT($1::text, url_id) AS short_url, long_url, usage_count, created FROM urls";
+    const sql = "SELECT id, CONCAT($1::text, url_id) AS short_url, long_url, usage_count, created FROM urls order by created desc";
 
     const res: QueryResult<UrlRecord> = await pool.query(sql, [baseUrl]);
     return res.rows;

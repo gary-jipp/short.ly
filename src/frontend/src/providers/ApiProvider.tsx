@@ -55,8 +55,8 @@ const ApiProvider: React.FC<ApiProviderProps> = function(props) {
         return record;
       })
       .catch(err => {
-        console.log("axios.post error: ", err.response.data);
-        setApiError(err.response?.data || "Unknown error");
+        console.log("axios.post error: ", err.response?.data);
+        setApiError("Unable to add this URL");
         return {longUrl: ""} as UrlRecord;  // Won't get used if apiError Set
       })
       .finally(() => {
@@ -71,8 +71,8 @@ const ApiProvider: React.FC<ApiProviderProps> = function(props) {
     return axios.put<UrlRecord>(`/api/urls/${record.id}`, record)
       .then(() => { })
       .catch(err => {
-        console.log("axios.put error: ", err.response.data);
-        setApiError(err.response.data);
+        console.log("axios.put error: ", err.response?.data);
+        setApiError("Unable to save this record");
       })
       .finally(() => {
         setApiPending(false);
@@ -88,8 +88,8 @@ const ApiProvider: React.FC<ApiProviderProps> = function(props) {
     return axios.delete(`/api/urls/${record.id}`)
       .then(() => { })
       .catch(err => {
-        console.log("axios.put error: ", err.response.data);
-        setApiError(err.response.data);
+        console.log("axios.delete error: ", err.response?.data);
+        setApiError("Error deleting this record");
       })
       .finally(() => {
         setApiPending(false);

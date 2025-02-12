@@ -18,6 +18,12 @@ const UrlFormShow: React.FC<UrlRecordShowProps> = function(props) {
   const [localError, setLocalError] = useState("");     // Locally generated errors
   const {updateUrlRecord, apiPending, apiError} = useApi(); // API provider
 
+  const startUpdate = function() {
+    setLocalError("");
+    setUpdate(true);
+    setSuccess(false);
+  };
+
   // Add using context function
   const saveRecord = function() {
     if (longUrl?.length < 6) {
@@ -63,7 +69,7 @@ const UrlFormShow: React.FC<UrlRecordShowProps> = function(props) {
         {copied && (<Typography color="success.main">Copied to clipboard!</Typography>)}
       </Box>
 
-      {!update && <Button variant="outlined" color="primary" fullWidth sx={{mt: 2}} onClick={() => setUpdate(true)}>
+      {!update && <Button variant="outlined" color="primary" fullWidth sx={{mt: 2}} onClick={startUpdate}>
         Update
       </Button>}
 
