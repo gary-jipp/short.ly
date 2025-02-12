@@ -1,7 +1,6 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from "react";
-import {UrlRecord} from "../types/UrlRecord";
-
-import mockRecords from '../stubData';  // Import the mock data
+import {ApiUrlRecord, UrlRecord} from "../types/UrlRecord";
+import axios from "axios";
 
 // Define the context type
 interface ApiContextType {
@@ -31,51 +30,69 @@ export const useApi = function() {
 
 const ApiProvider: React.FC<ApiProviderProps> = function(props) {
   const [urlRecords, setUrlRecords] = useState<UrlRecord[]>([]);
-  const [apiPending, setDataPending] = useState(false);
+  const [apiPending, setApiPending] = useState(false);
   const [apiError, setApiError] = useState("");
 
   // Load data once on Startup
   useEffect(() => {
-    setUrlRecords([...mockRecords]);
+    axios.get<ApiUrlRecord[]>("/api/urls")
+      .then(res => {
+        // Map api records to app records & save
+        const records: UrlRecord[] = res.data.map(r => ({id: r.id, shortUrl: r.short_url, longUrl: r.long_url, usageCount: r.usage_count, created: r.created}));
+        setUrlRecords(records);
+      })
+      .catch();
   }, []);
 
   // Adds a new Url Record and returns the updated record with id & shortUrl
   const addUrlRecord = (newRecord: UrlRecord): Promise<UrlRecord> => {
-    setDataPending(true);
-    console.log("addUrlRecord - provider");
+    setApiPending(true);
 
-    return Promise.resolve()
-      .then(() => {
-        setUrlRecords((prev) => [...prev, newRecord]);
-        setDataPending(false);
-        return {...newRecord, id: 999, shortUrl: "https://short.ly/12321"} as UrlRecord;
+    return axios.post<ApiUrlRecord>("/api/urls", newRecord) // body type is inferred
+      .then(res => {
+        const rec = res.data; // type inferred
+        const record: UrlRecord = {id: rec.id, longUrl: rec.long_url, shortUrl: rec.short_url, usageCount: rec.usage_count};
+        return record;
+      })
+      .catch(err => {
+        console.log("axios.post error: ", err.response.data);
+        setApiError(err.response?.data || "Unknown error");
+        return {longUrl: ""} as UrlRecord;  // Won't get used if apiError Set
+      })
+      .finally(() => {
+        setApiPending(false);
       });
   };
 
   // Adds a new Url Record.  No return
   const updateUrlRecord = (record: UrlRecord): Promise<void> => {
-    setDataPending(true);
-    console.log("addUrlRecord - provider");
+    setApiPending(true);
 
-    return Promise.resolve()
-      .then(() => {
-        setDataPending(false);
-        setUrlRecords((prev) => [...prev, record]);
+    return axios.put<UrlRecord>(`/api/urls/${record.id}`, record)
+      .then(() => { })
+      .catch(err => {
+        console.log("axios.put error: ", err.response.data);
+        setApiError(err.response.data);
+      })
+      .finally(() => {
+        setApiPending(false);
       });
+
   };
 
-  // Deletes a Url Record.  No return
+  // Deletes a Url Record.  Nothing returned
   const deleteUrlRecord = (record: UrlRecord): Promise<void> => {
-    setDataPending(true);
+    setApiPending(true);
     console.log("deleteUrlRecord - provider");
 
-    // Test errors
-    // setDataError("Test Error 12345");
-
-    return Promise.resolve()
-      .then(() => {
-        setDataPending(false);
-        setUrlRecords((prev) => prev.filter((rec) => rec.id !== record.id));
+    return axios.delete(`/api/urls/${record.id}`)
+      .then(() => { })
+      .catch(err => {
+        console.log("axios.put error: ", err.response.data);
+        setApiError(err.response.data);
+      })
+      .finally(() => {
+        setApiPending(false);
       });
   };
 

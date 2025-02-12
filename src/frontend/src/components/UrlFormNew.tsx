@@ -35,9 +35,10 @@ const UrlFormNew: React.FC<UrlFormNewProps> = function(props) {
 
     addUrlRecord(record)
       .then(res => {
-        setShortUrl(res.shortUrl);
+        setShortUrl(res.shortUrl ? res.shortUrl : "");
         setSuccess(true);
       })
+
       .catch(err => {
         console.log(err);
         setTimeout(() => {   // Clear error message after 3 seconds
