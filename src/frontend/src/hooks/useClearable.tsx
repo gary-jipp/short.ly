@@ -8,22 +8,32 @@ import {useState} from "react";
  * @returns
  */
 
-interface UseClearableReturn {
+interface AutoClearable {
   pending: boolean;
+  copied: boolean;
   error: string;
   setPending: (state: boolean) => void;
+  setCopied: (state: boolean) => void;
   setError: (message: string) => void;
 }
 
-const useClearable = function(duration: number): UseClearableReturn {
+const useClearable = function(duration: number): AutoClearable {
   const [pending, savePending] = useState(false);
   const [error, saveError] = useState("");
+  const [copied, saveCopied] = useState(false);
 
   const setPending = function(state: boolean) {
     savePending(state);
-    state && setTimeout(() => {   // Clear pending message after <timeout> seconds
+    state && setTimeout(() => {   // Clear pending after <timeout> seconds
       savePending(false);;
     }, 20000);    // Just in case. Pending is usually cleared manually.
+  };
+
+  const setCopied = function(state: boolean) {
+    saveCopied(state);
+    state && setTimeout(() => {   // Clear copied  after <timeout> seconds
+      saveCopied(false);;
+    }, duration*1000);    // Just in case. Pending is usually cleared manually.
   };
 
   const setError = function(message: string) {
@@ -33,7 +43,8 @@ const useClearable = function(duration: number): UseClearableReturn {
     }, duration * 1000);
   };
 
-  return {pending, error, setPending, setError};
+
+  return {pending, error, copied, setPending, setError, setCopied};
 };
 
 export default useClearable;

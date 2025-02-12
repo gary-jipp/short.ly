@@ -3,6 +3,7 @@ import {Typography, TextField, Button, Box, Link, IconButton, CircularProgress, 
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
 import {useApi} from "../providers/ApiProvider";
+import useClearable from "../hooks/useClearable";
 
 interface UrlRecordShowProps {
   record: UrlRecord;
@@ -12,19 +13,15 @@ interface UrlRecordShowProps {
 const UrlFormShow: React.FC<UrlRecordShowProps> = function(props) {
   const [longUrl, setUrl] = useState(props.record?.longUrl || "");    // Long Url Text field
   const [shortUrl] = useState(props.record?.shortUrl || "");          // Displayed ShortUrl
-  const [copied, setCopied] = useState(false);
   const [update, setUpdate] = useState(false);          // Toggle to allow editing
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
-  const [pending, setPending] = useState(false);
+
+  const {pending, error, copied, setError, setPending, setCopied} = useClearable(2);
   const {updateUrlRecord} = useApi(); // API provider
 
 
   const showError = function(message: string) {
     setError(message);
-    return setTimeout(() => {   // Clear error message after 2 seconds
-      setError("");
-    }, 2000);
   };
 
   // Enable Updating
@@ -45,7 +42,7 @@ const UrlFormShow: React.FC<UrlRecordShowProps> = function(props) {
       .then(() => {
         setSuccess(true);
       })
-      .catch(err => {
+      .catch(() => {
         showError("Unable to save this URL");
       })
       .finally(() => {
@@ -57,7 +54,6 @@ const UrlFormShow: React.FC<UrlRecordShowProps> = function(props) {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(shortUrl);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
