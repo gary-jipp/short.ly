@@ -41,7 +41,9 @@ const ApiProvider: React.FC<ApiProviderProps> = function(props) {
         const records: UrlRecord[] = res.data.map(r => ({id: r.id, shortUrl: r.short_url, longUrl: r.long_url, usageCount: r.usage_count, created: r.created}));
         setUrlRecords(records);
       })
-      .catch();
+      .catch(err => {
+        console.log("Error on Fetch: ", err.message);
+      });
   }, []);
 
   // Adds a new Url Record and returns the updated record with id & shortUrl
@@ -60,6 +62,7 @@ const ApiProvider: React.FC<ApiProviderProps> = function(props) {
         console.log("axios.post error: ", err.response?.data);
         setApiError("Unable to add this URL");
         return {longUrl: ""} as UrlRecord;  // Won't get used if apiError Set
+        // TODO: re-throw  instead
       })
       .finally(() => {
         setApiPending(false);
@@ -77,6 +80,7 @@ const ApiProvider: React.FC<ApiProviderProps> = function(props) {
       .catch(err => {
         console.log("axios.put error: ", err.response?.data);
         setApiError("Unable to save this record");
+        // TODO: re-throw
       })
       .finally(() => {
         setApiPending(false);
@@ -96,6 +100,7 @@ const ApiProvider: React.FC<ApiProviderProps> = function(props) {
       .catch(err => {
         console.log("axios.delete error: ", err.response?.data);
         setApiError("Error deleting this record");
+        // TODO: re-throw
       })
       .finally(() => {
         setApiPending(false);

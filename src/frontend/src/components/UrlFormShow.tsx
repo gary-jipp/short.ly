@@ -15,12 +15,21 @@ const UrlFormShow: React.FC<UrlRecordShowProps> = function(props) {
   const [copied, setCopied] = useState(false);
   const [update, setUpdate] = useState(false);          // Toggle to allow editing
   const [success, setSuccess] = useState(false);
-  const [localError, setLocalError] = useState("");     // Locally generated errors
-  const {updateUrlRecord, apiPending, apiError} = useApi(); // API provider
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
+  const {updateUrlRecord} = useApi(); // API provider
+
+
+  const showError = function(message: string) {
+    setError(message);
+    return setTimeout(() => {   // Clear error message after 2 seconds
+      setError("");
+    }, 2000);
+  };
 
   // Enable Updating
   const startUpdate = function() {
-    setLocalError("");
+    setError("");
     setUpdate(true);
     setSuccess(false);
   };
@@ -28,16 +37,19 @@ const UrlFormShow: React.FC<UrlRecordShowProps> = function(props) {
   // Add using context function
   const saveRecord = function() {
     if (longUrl?.length < 6) {
-      setLocalError("Your URL is too short");
-      return setTimeout(() => {   // Clear error message after 3 seconds
-        setLocalError("");
-      }, 2000);
+      showError("Your URL is too short");
     }
 
     // Update longUrl in record & save
     updateUrlRecord({...props.record, longUrl})
       .then(() => {
         setSuccess(true);
+      })
+      .catch(err => {
+        showError("Unable to save this URL");
+      })
+      .finally(() => {
+        setPending(false);
       });
 
   };
@@ -47,9 +59,6 @@ const UrlFormShow: React.FC<UrlRecordShowProps> = function(props) {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
-
-  // API and local errors are treated the same
-  const error = localError || apiError;
 
   return (
     <Box maxWidth="sm" sx={{mt: 4, p: 4, border: "1px solid #ddd", borderRadius: 2}}    >
@@ -81,7 +90,9 @@ const UrlFormShow: React.FC<UrlRecordShowProps> = function(props) {
       {/* Display pending, error, sucess or Save Button */}
       {update && (
         <Box sx={{mt: 2}}>
-          {apiPending ? (<Button variant="outlined" color="primary" fullWidth disabled><CircularProgress size={24} /></Button>)
+          {pending ? (
+            <Button variant="outlined" color="primary" fullWidth disabled><CircularProgress size={24} />
+            </Button>)
             : error ? (<Alert severity="error">{error}</Alert>)
               : success ? (<Alert severity="success">Saved successfully!</Alert>)
                 : (<Button variant="outlined" color="primary" fullWidth onClick={saveRecord}>Save</Button>)}

@@ -4,6 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
 import ConfirmDialog from "./ConfirmDialog";
 import {useApi} from "../providers/ApiProvider";
+import useClearable from "../hooks/useClearable";
 
 interface UrlRecordListItemProps {
   record: UrlRecord;
@@ -12,7 +13,8 @@ interface UrlRecordListItemProps {
 
 const UrlRecordListItem: React.FC<UrlRecordListItemProps> = function(props) {
   const [showConfirm, setShowConfirm] = useState(false);
-  const {deleteUrlRecord, apiPending, apiError} = useApi();   // get delete function from Context state
+  const {pending, error, setError, setPending} = useClearable(2);
+  const {deleteUrlRecord} = useApi();   // get delete function from Context state
 
   const {record} = props;
 
@@ -21,14 +23,32 @@ const UrlRecordListItem: React.FC<UrlRecordListItemProps> = function(props) {
     props.onClick(record);
   };
 
+  const confirmDelete = function() {
+    setShowConfirm(true);
+    setPending(true);
+  };
+
+  const cancelDelete = function() {
+    setShowConfirm(false);
+    setPending(false);
+  };
+
   // Delete using context function
   const deleteRecord = function() {
     setShowConfirm(false);
     deleteUrlRecord(record)
       .then(() => {
         console.log("Deleted");
+      })
+      .catch(err => {
+        console.log(err);
+        setError("An error occured deleting this record");
+      })
+      .finally(() => {
+        setPending(false);
       });
   };
+
 
   return (
     <>
@@ -53,14 +73,14 @@ const UrlRecordListItem: React.FC<UrlRecordListItemProps> = function(props) {
 
           <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end'}}>
 
-            <IconButton edge="end" color="error" onClick={() => setShowConfirm(true)} disabled={apiPending}>
-              {apiPending ? <CircularProgress size={24} /> : <DeleteIcon />}
+            <IconButton edge="end" color="error" onClick={confirmDelete} disabled={pending}>
+              {pending ? <CircularProgress size={24} /> : <DeleteIcon />}
             </IconButton>
 
             {/* Error message */}
-            {apiError && (
+            {error && (
               <Typography variant="caption" color="error" sx={{marginTop: 1}}>
-                {apiError}
+                {error}
               </Typography>
             )}
           </Box>
@@ -68,7 +88,7 @@ const UrlRecordListItem: React.FC<UrlRecordListItemProps> = function(props) {
         </ListItem>
       </Box>
 
-      <ConfirmDialog show={showConfirm} content={record.shortUrl} onConfirm={deleteRecord} onCancel={() => setShowConfirm(false)} title="Do you want to delete this URL?" buttonText="Yes, Delete" />
+      <ConfirmDialog show={showConfirm} content={record.shortUrl} onConfirm={deleteRecord} onCancel={cancelDelete} title="Do you want to delete this URL?" buttonText="Yes, Delete" />
     </>
   );
 };
