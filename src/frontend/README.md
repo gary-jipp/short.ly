@@ -1,7 +1,7 @@
 # ShortLY  React Front End
 
 This application requires the API application to be running.
-See the `README.md` in backend for running  API
+See the `README.md` in backend for running the API locally or in a container
 
 ## Development build & run
 ```
@@ -25,13 +25,21 @@ docker build . -t shortly --build-arg API_URL=http://localhost:8000 --build-arg 
 ## Run container
 ```
 docker run -d --rm --name=shortly -p8080:80 shortly
-or
-podman run -d --rm --name=shortly -p8080:80 shortly
+
+# In network host mode for running on local envrionment
+podman run --replace  --network=host -d --name=shortly shortly
 ```
 
+## Container Notes:
+- `nginx.conf` file used for docker container.
+- `API_URL` & `PORT` are parameters to the docker build
+- can use host network mode to make inter-container networknig easier
+- could also create a custom network for containers
+- can also use `host.docker.internal` the `API_URL` hostname (`host.containers.internal` for podman)
 
-## Notes:
-- `nginx.conf` file used for docker container.  API_URL is parameter to docker build
+
+
+## Development Notes:
 - Some UI edge cases need improvements
 - Promises used instead of await for easier debugging
 - error handling is still crude
