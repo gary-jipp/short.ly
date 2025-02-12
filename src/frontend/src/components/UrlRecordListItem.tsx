@@ -44,7 +44,7 @@ const UrlRecordListItem: React.FC<UrlRecordListItemProps> = function(props) {
       })
       .catch(err => {
         const msg = err.response?.data?.error || err.message;
-        setError(`Unable to save this URL - ${msg}`);
+        setError(`Unable to delete - ${msg}`);
       })
       .finally(() => {
         setPending(false);
