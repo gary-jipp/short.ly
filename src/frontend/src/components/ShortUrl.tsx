@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {Typography, Button, Box, Link, IconButton, Alert} from "@mui/material";
+import {Typography, Box, Link, IconButton, Alert} from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 interface UrlRecordEditProps {
