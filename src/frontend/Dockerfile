@@ -1,13 +1,11 @@
-# Build  React App using node Alpine
 FROM docker.io/node:alpine AS build
-
 WORKDIR /app
 
 # install & cache packages layer
 COPY package.json package-lock.json .
 RUN npm install
 
-# copy source & build
+# copy & build
 COPY . .
 RUN npm run build
 

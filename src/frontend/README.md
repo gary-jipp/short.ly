@@ -24,10 +24,11 @@ docker build . -t shortly --build-arg API_URL=http://localhost:8000 --build-arg 
 
 ## Run container
 ```
-docker run -d --rm --name=shortly -p8080:80 shortly
-
 # In network host mode for running on local envrionment
-podman run --replace  --network=host -d --name=shortly shortly
+podman run -d --replace  --network=host --name=shortly shortly
+
+# with mapped ports for production
+docker run -d --replace  -p8080:80  --name=shortly shortly
 ```
 
 ## Browse to the Application

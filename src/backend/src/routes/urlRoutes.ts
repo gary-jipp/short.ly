@@ -42,7 +42,7 @@ export default function(pool: Pool): Router {  // Type is inferred so not really
   });
 
   const UrlIdLength = Number(process.env.URL_ID_LENGTH);
-  console.log("URL_ID_LENGTH =", UrlIdLength);
+  console.log("URL_ID_LENGTH =", UrlIdLength || 6);
 
   router.post("/", async (req, res) => {
     const longUrl = req.body.longUrl;
