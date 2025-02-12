@@ -33,8 +33,9 @@ const UrlFormNew: React.FC<UrlFormNewProps> = function(props) {
         setShortUrl(res.shortUrl ? res.shortUrl : "");
         setSuccess(true);
       })
-      .catch(() => {
-        setError("Unable to save this URL");
+      .catch(err => {
+        const msg = err.response?.data?.error || err.message;
+        setError(`Unable to save this URL - ${msg}`);
       })
       .finally(() => {
         setPending(false);

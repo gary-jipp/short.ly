@@ -41,8 +41,9 @@ const UrlFormShow: React.FC<UrlRecordShowProps> = function(props) {
       .then(() => {
         setSuccess(true);
       })
-      .catch(() => {
-        setError("Unable to save this URL");
+      .catch(err => {
+        const msg = err.response?.data?.error || err.message;
+        setError(`Unable to save this URL - ${msg}`);
       })
       .finally(() => {
         setPending(false);
@@ -71,8 +72,8 @@ const UrlFormShow: React.FC<UrlRecordShowProps> = function(props) {
         <IconButton color="primary" onClick={copyToClipboard} sx={{ml: 1}}>
           <ContentCopyIcon />
         </IconButton>
-        {copied && (<Typography color="success.main">Copied to clipboard!</Typography>)}
       </Box>
+      {copied && (<Typography color="success.main">Copied to clipboard!</Typography>)}
 
       {!update && <Button variant="outlined" color="primary" fullWidth sx={{mt: 2}} onClick={startUpdate}>
         Update

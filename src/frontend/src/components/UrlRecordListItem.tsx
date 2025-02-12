@@ -9,6 +9,7 @@ import useTransientState from "../hooks/useTransientState";
 interface UrlRecordListItemProps {
   record: UrlRecord;
   onClick: (record: UrlRecord) => void;
+  onDelete: (record: UrlRecord) => void;
 }
 
 const UrlRecordListItem: React.FC<UrlRecordListItemProps> = function(props) {
@@ -39,11 +40,11 @@ const UrlRecordListItem: React.FC<UrlRecordListItemProps> = function(props) {
     setShowConfirm(false);
     deleteUrlRecord(record)
       .then(() => {
-        console.log("Deleted");
+        props.onDelete(record);  // Notify parent of deletion
       })
       .catch(err => {
-        console.log(err);
-        setError("An error occured deleting this record");
+        const msg = err.response?.data?.error || err.message;
+        setError(`Unable to save this URL - ${msg}`);
       })
       .finally(() => {
         setPending(false);

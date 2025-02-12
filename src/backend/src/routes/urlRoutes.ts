@@ -50,7 +50,7 @@ export default function(pool: Pool): Router {  // Type is inferred so not really
     if (!await isUrlValid(longUrl)) {
       console.log("Not Valid:", longUrl);
 
-      res.status(400).json({error: "invalid"});
+      res.status(400).json({error: "This URL is not valid"});
       return;
     }
 
@@ -75,14 +75,15 @@ export default function(pool: Pool): Router {  // Type is inferred so not really
     const longUrl = req.body.longUrl;
 
     if (!await isUrlValid(longUrl)) {
-      res.status(400).json({error: "invalid"});
+      res.status(400).json({error: "This URL is not valid"});
       return;
     }
 
     try {
+      // Update and return number of rows updated
       const row = await updateUrl(id, longUrl);
       if (!row) {
-        res.status(404).json({error: "Resource not found"});
+        res.status(404).json({error: "URL Record not found"});
         return;
       }
 
@@ -99,7 +100,7 @@ export default function(pool: Pool): Router {  // Type is inferred so not really
     try {
       const row = await deleteUrl(id);
       if (!row) {
-        res.status(404).json({error: "Resource not found"});
+        res.status(404).json({error: "URL Record not found"});
         return;
       }
 

@@ -1,8 +1,9 @@
 import {Fragment} from 'react';
-import {List, Box, Divider, Typography, IconButton} from '@mui/material';
+import {List, Box, Divider, Typography, IconButton, Alert} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import UrlRecordListItem from './UrlRecordListItem';
 import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
+import useTransientState from '../hooks/useTransientState';
 
 interface UrlRecordListProps {
   records: UrlRecord[];  // array of UrlRecord objects
@@ -10,7 +11,14 @@ interface UrlRecordListProps {
   onAdd: () => void;
 }
 
+// Renmders a List of URL Record Items
 const UrlRecordList: React.FC<UrlRecordListProps> = function(props) {
+  const [notification, setNotification] = useTransientState<string>("", 2000);
+
+  // When notified, show "deleted" notification
+  const onDelete = function(record: UrlRecord) {
+    setNotification(`${record.shortUrl} deleted`);
+  };
 
   return (
     <Box sx={{padding: 1}}>
@@ -20,16 +28,20 @@ const UrlRecordList: React.FC<UrlRecordListProps> = function(props) {
           Your Short URL's
         </Typography>
 
+        {notification && (<Typography color="warning">{notification}</Typography>)}
+
         <IconButton color="primary" onClick={props.onAdd}>
           <AddIcon />
         </IconButton>
       </Box>
 
+      {/* map records array to array of UrlRecordListItem objects  */}
       <List disablePadding sx={{border: '1px solid #ddd', borderRadius: 2}}>
         {props.records.map((record, index) => (
 
-          <Fragment key={index}>
-            <UrlRecordListItem record={record} onClick={props.onClick} />
+          // id key is better than using index
+          <Fragment key={record.id}>
+            <UrlRecordListItem record={record} onClick={props.onClick} onDelete={onDelete} />
             {index < props.records.length - 1 && <Divider />}
           </Fragment>
 

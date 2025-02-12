@@ -5,8 +5,6 @@ import axios from "axios";
 // Define the context type
 interface ApiContextType {
   urlRecords: UrlRecord[];
-  apiPending: boolean;
-  apiError: string;
   addUrlRecord: (record: UrlRecord) => Promise<UrlRecord>;
   updateUrlRecord: (record: UrlRecord) => Promise<void>;
   deleteUrlRecord: (record: UrlRecord) => Promise<void>;
@@ -30,9 +28,6 @@ export const useApi = function() {
 
 const ApiProvider: React.FC<ApiProviderProps> = function(props) {
   const [urlRecords, setUrlRecords] = useState<UrlRecord[]>([]);
-
-  const [apiPending] = useState(false); // TODO: remove
-  const [apiError] = useState("");  // TODO: renmove
 
   // Load data once on Startup
   useEffect(() => {
@@ -85,7 +80,7 @@ const ApiProvider: React.FC<ApiProviderProps> = function(props) {
   };
 
   // This is what our Context Provider provides
-  const value = {urlRecords, apiPending, apiError, addUrlRecord, updateUrlRecord, deleteUrlRecord};
+  const value = {urlRecords, addUrlRecord, updateUrlRecord, deleteUrlRecord};
 
   // This code is pretty much the same for every Provider
   return (

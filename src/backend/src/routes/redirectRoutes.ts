@@ -15,7 +15,7 @@ export default function(pool: Pool): Router {
 
     try {
       const row = await getUrl(urlId);
-      if (!row) { // No mathing record found
+      if (!row) { // No matching record found
         res.status(404).send("The page you requested was not found");
         return;
       }
