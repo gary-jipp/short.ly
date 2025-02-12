@@ -19,8 +19,9 @@ const apiContext = createContext<ApiContextType | undefined>(undefined);
 
 // Custom Hooks for easy access to the Context values object
 export const useApi = function() {
+
   const context = useContext(apiContext);
-  if (!context) {
+  if (!context) {             // Check if not wrapped in Provider
     throw new Error("useRecords() must be used within a RecordProvider");
   }
   return context;
