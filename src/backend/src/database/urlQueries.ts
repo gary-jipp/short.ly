@@ -2,8 +2,8 @@ import {Pool, QueryResult} from "pg";
 
 interface UrlBaseRecord {
   id: number;
-  longurl: string;
-  usagecount: number;
+  long_url: string;
+  usage_count: number;
   created?: string;
 }
 interface UrlIdRecord extends UrlBaseRecord {
