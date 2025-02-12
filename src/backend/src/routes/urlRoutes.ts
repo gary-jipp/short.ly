@@ -9,7 +9,7 @@ const generateShortUrlId = function(size: number): string {
 };
 
 const getBaseUrl = function(req: Request) {
-  return `${req.protocol}://${req.get('host')}/`;
+  return `${req.protocol}://${req.get('host')}`;
 };
 
 // Get Express Router to use for endpoints
