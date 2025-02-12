@@ -46,6 +46,7 @@ export default function(pool: Pool): Router {  // Type is inferred so not really
 
   router.post("/", async (req, res) => {
     const longUrl = req.body.longUrl;
+
     if (!await isUrlValid(longUrl)) {
       console.log("Not Valid:", longUrl);
 
@@ -53,14 +54,16 @@ export default function(pool: Pool): Router {  // Type is inferred so not really
       return;
     }
 
-    let UrlId: string;
+    // make sure urlId is unique
+    let urlId: string;
     do {
-      UrlId = generateShortUrlId(UrlIdLength);
-    } while (await getUrl(UrlId));
+      urlId = generateShortUrlId(UrlIdLength);
+    } while (await getUrl(urlId));
 
+    const baseUrl = getBaseUrl(req);
     try {
-      const row = await addUrl(UrlId, longUrl);
-      res.json(row);
+      const row = await addUrl(urlId, longUrl);
+      res.json({...row, short_url: `${baseUrl}${urlId}`});
     } catch (error) {
       console.log(error);
       res.json(error);

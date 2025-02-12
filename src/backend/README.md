@@ -10,3 +10,5 @@
 - Using Express Router for `/api/url`
 - Inject Pool into routers at runtime so `new Pool()` is only called once
 - Avoided comments for "obvious" code. That can be a matter of opinion tho
+- Long URLS that do not return 2xx are rejected. eg: https://example.com/test
+-
