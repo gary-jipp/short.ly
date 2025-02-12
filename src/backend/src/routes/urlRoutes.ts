@@ -1,7 +1,7 @@
 import express, {Router, Request} from "express";
 import crypto from 'crypto';
 import {Pool} from "pg";
-import urlQueries from '../database/urls';
+import urlQueries from '../database/urlQueries';
 
 const generateShortUrlId = function(size: number): string {
   // Generate a pretty unique url ID

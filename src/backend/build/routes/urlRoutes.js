@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = default_1;
 const express_1 = __importDefault(require("express"));
 const crypto_1 = __importDefault(require("crypto"));
-const urls_1 = __importDefault(require("../database/urls"));
+const urlQueries_1 = __importDefault(require("../database/urlQueries"));
 const generateShortUrlId = function (size) {
     // Generate a pretty unique url ID
     return crypto_1.default.randomBytes(3).toString('hex').toUpperCase().slice(0, size).toLowerCase();
@@ -26,7 +26,7 @@ const getBaseUrl = function (req) {
 // Get Express Router to use for endpoints
 const router = express_1.default.Router();
 function default_1(pool) {
-    const { getUrls, getUrl, addUrl, updateUrl, deleteUrl } = (0, urls_1.default)(pool);
+    const { getUrls, getUrl, addUrl, updateUrl, deleteUrl } = (0, urlQueries_1.default)(pool);
     router.get("/", (req, res) => __awaiter(this, void 0, void 0, function* () {
         const baseUrl = getBaseUrl(req);
         try {

@@ -3,7 +3,7 @@ dotenv.config();
 
 import express from "express";
 import morgan from "morgan";
-import pool from './config/db';
+import pool from './config/dbConfig';
 import urlRoutes from './routes/urlRoutes';
 
 const app = express();  // Type is inferred
