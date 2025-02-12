@@ -16,15 +16,34 @@ exports.default = default_1;
 const express_1 = __importDefault(require("express"));
 const crypto_1 = __importDefault(require("crypto"));
 const urls_1 = __importDefault(require("../database/urls"));
-const router = express_1.default.Router();
-const generateShortUrl = function (size) {
-    return crypto_1.default.randomBytes(3).toString('hex').toUpperCase().slice(0, size); // pretty unique
+const generateShortUrlId = function (size) {
+    // Generate a pretty unique shortUrl ID
+    return crypto_1.default.randomBytes(3).toString('hex').toUpperCase().slice(0, size).toLowerCase();
 };
+// Get Express Router to use for endpoints
+const router = express_1.default.Router();
 function default_1(pool) {
     const { getUrls, getUrl, addUrl, updateUrl, deleteUrl } = (0, urls_1.default)(pool);
+    router.get("/", (_, res) => __awaiter(this, void 0, void 0, function* () {
+        try {
+            const rows = yield getUrls();
+            res.json(rows);
+        }
+        catch (error) {
+            console.log(error);
+            res.json(error);
+        }
+    }));
+    const shortUrlIdLength = Number(process.env.URL_ID_LENGTH);
+    console.log("URL_ID_LENGTH =", shortUrlIdLength);
     router.post("/", (req, res) => __awaiter(this, void 0, void 0, function* () {
-        const longUrl = req.body.longUrl; //
-        const shortUrl = generateShortUrl(6);
+        const longUrl = req.body.longUrl;
+        let shortUrl;
+        do {
+            shortUrl = generateShortUrlId(shortUrlIdLength);
+            console.log("shortUrl", shortUrl);
+        } while (yield getUrl(shortUrl));
+        console.log("Add Record");
         try {
             const row = yield addUrl(shortUrl, longUrl);
             res.json(row);
@@ -34,10 +53,23 @@ function default_1(pool) {
             res.json(error);
         }
     }));
-    router.get("/", (_, res) => __awaiter(this, void 0, void 0, function* () {
+    router.put("/:id", (req, res) => __awaiter(this, void 0, void 0, function* () {
+        const id = Number(req.params.id);
+        const longUrl = req.body.longUrl;
         try {
-            const rows = yield getUrls();
-            res.json(rows);
+            const row = yield updateUrl(id, longUrl);
+            res.json(row);
+        }
+        catch (error) {
+            console.log(error);
+            res.json(error);
+        }
+    }));
+    router.delete("/:id", (req, res) => __awaiter(this, void 0, void 0, function* () {
+        const id = Number(req.params.id);
+        try {
+            const row = yield deleteUrl(id);
+            res.json(row);
         }
         catch (error) {
             console.log(error);
