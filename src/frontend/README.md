@@ -30,13 +30,18 @@ docker run -d --rm --name=shortly -p8080:80 shortly
 podman run --replace  --network=host -d --name=shortly shortly
 ```
 
+## Browse to the Application
+http://localhost:8080
+
+
 ## Container Notes:
+- the above assumes you are using Windows WSL or Linux.
+- podman is generally a better choice than docker, but either works
 - `nginx.conf` file used for docker container.
 - `API_URL` & `PORT` are parameters to the docker build
 - can use host network mode to make inter-container networknig easier
 - could also create a custom network for containers
 - can also use `host.docker.internal` the `API_URL` hostname (`host.containers.internal` for podman)
-
 
 
 ## Development Notes:
