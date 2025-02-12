@@ -52,6 +52,7 @@ const ApiProvider: React.FC<ApiProviderProps> = function(props) {
       .then(res => {
         const rec = res.data; // type inferred
         const record: UrlRecord = {id: rec.id, longUrl: rec.long_url, shortUrl: rec.short_url, usageCount: rec.usage_count};
+        setUrlRecords((prev) => [...prev, record]);
         return record;
       })
       .catch(err => {
@@ -69,7 +70,9 @@ const ApiProvider: React.FC<ApiProviderProps> = function(props) {
     setApiPending(true);
 
     return axios.put<UrlRecord>(`/api/urls/${record.id}`, record)
-      .then(() => { })
+      .then(() => {
+        setUrlRecords((prev) => [...prev, record]);
+      })
       .catch(err => {
         console.log("axios.put error: ", err.response?.data);
         setApiError("Unable to save this record");
@@ -86,7 +89,9 @@ const ApiProvider: React.FC<ApiProviderProps> = function(props) {
     console.log("deleteUrlRecord - provider");
 
     return axios.delete(`/api/urls/${record.id}`)
-      .then(() => { })
+      .then(() => {
+        setUrlRecords((prev) => prev.filter((rec) => rec.id !== record.id));
+      })
       .catch(err => {
         console.log("axios.delete error: ", err.response?.data);
         setApiError("Error deleting this record");
