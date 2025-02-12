@@ -17,16 +17,20 @@ const express_1 = __importDefault(require("express"));
 const crypto_1 = __importDefault(require("crypto"));
 const urls_1 = __importDefault(require("../database/urls"));
 const generateShortUrlId = function (size) {
-    // Generate a pretty unique shortUrl ID
+    // Generate a pretty unique url ID
     return crypto_1.default.randomBytes(3).toString('hex').toUpperCase().slice(0, size).toLowerCase();
+};
+const getBaseUrl = function (req) {
+    return `${req.protocol}://${req.get('host')}/`;
 };
 // Get Express Router to use for endpoints
 const router = express_1.default.Router();
 function default_1(pool) {
     const { getUrls, getUrl, addUrl, updateUrl, deleteUrl } = (0, urls_1.default)(pool);
-    router.get("/", (_, res) => __awaiter(this, void 0, void 0, function* () {
+    router.get("/", (req, res) => __awaiter(this, void 0, void 0, function* () {
+        const baseUrl = getBaseUrl(req);
         try {
-            const rows = yield getUrls();
+            const rows = yield getUrls(baseUrl);
             res.json(rows);
         }
         catch (error) {
@@ -34,18 +38,18 @@ function default_1(pool) {
             res.json(error);
         }
     }));
-    const shortUrlIdLength = Number(process.env.URL_ID_LENGTH);
-    console.log("URL_ID_LENGTH =", shortUrlIdLength);
+    const UrlIdLength = Number(process.env.URL_ID_LENGTH);
+    console.log("URL_ID_LENGTH =", UrlIdLength);
     router.post("/", (req, res) => __awaiter(this, void 0, void 0, function* () {
         const longUrl = req.body.longUrl;
-        let shortUrl;
+        let UrlId;
         do {
-            shortUrl = generateShortUrlId(shortUrlIdLength);
-            console.log("shortUrl", shortUrl);
-        } while (yield getUrl(shortUrl));
+            UrlId = generateShortUrlId(UrlIdLength);
+            console.log("urlId", UrlId);
+        } while (yield getUrl(UrlId));
         console.log("Add Record");
         try {
-            const row = yield addUrl(shortUrl, longUrl);
+            const row = yield addUrl(UrlId, longUrl);
             res.json(row);
         }
         catch (error) {

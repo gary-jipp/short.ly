@@ -1,10 +1,10 @@
 DROP TABLE IF EXISTS urls;
 CREATE TABLE urls (
   id SERIAL PRIMARY KEY NOT NULL,
-  short_url VARCHAR(256) NOT NULL UNIQUE,
+  url_id VARCHAR(256) NOT NULL UNIQUE,
   long_url VARCHAR(256) NOT NULL,
   usage_count INTEGER NOT NULL DEFAULT 0,
   created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX short_url_index ON url_records (short_url);
+CREATE INDEX url_index ON url_records (url_id);

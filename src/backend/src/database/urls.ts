@@ -1,41 +1,50 @@
 import {Pool, QueryResult} from "pg";
 
-interface Url {
+interface UrlBaseRecord {
   id: number;
-  short_url: string;
-  long_url: string;
-  usage_count: number;
+  longurl: string;
+  usagecount: number;
   created?: string;
 }
+interface UrlIdRecord extends UrlBaseRecord {
+  urli_d: string;
+  short_url?: string;
+}
+interface ShortUrlRecord extends UrlBaseRecord {
+  short_url: string;
+  url_id?: string;
+}
+
+type UrlRecord = ShortUrlRecord | UrlIdRecord;
 
 interface urlQueries {
-  getUrls: () => Promise<Url[]>;
-  getUrl: (shortUrl: string) => Promise<Url>;
-  addUrl: (shortUrl: string, longUrl: string) => Promise<Url>;
+  getUrls: (baseUrl: string) => Promise<UrlRecord[]>;
+  getUrl: (urlId: string) => Promise<UrlRecord>;
+  addUrl: (urlId: string, longUrl: string) => Promise<UrlRecord>;
   updateUrl: (id: number, longUrl: string) => Promise<number>;
   deleteUrl: (id: number) => Promise<number>;
 }
 
 export default function(pool: Pool): urlQueries {
 
-  const getUrls = async (): Promise<Url[]> => {
-    const sql = "SELECT id, short_url AS shortUrl, long_url AS longUrl,  usage_count as usageCount, created FROM urls";
+  const getUrls = async (baseUrl: string): Promise<UrlRecord[]> => {
+    const sql = "SELECT id, CONCAT($1::text, url_id) AS short_url, long_url, usage_count, created FROM urls";
 
-    const res: QueryResult<Url> = await pool.query(sql);
+    const res: QueryResult<UrlRecord> = await pool.query(sql, [baseUrl]);
     return res.rows;
   };
 
-  const getUrl = async (shortUrl: string): Promise<Url> => {
-    const sql = "SELECT id, short_url AS shortUrl, long_url AS longUrl, created FROM urls WHERE short_url=$1";
+  const getUrl = async (shortUrl: string): Promise<UrlRecord> => {
+    const sql = "SELECT id, url_id, long_url, created FROM urls WHERE url_id=$1";
 
-    const res: QueryResult<Url> = await pool.query(sql, [shortUrl]);
+    const res: QueryResult<UrlRecord> = await pool.query(sql, [shortUrl]);
     return res.rows[0];
   };
 
-  const addUrl = async (shortUrl: string, longUrl: string): Promise<Url> => {
-    const sql = 'insert into urls (short_url, long_url) values ($1,$2) returning *';
+  const addUrl = async (shortUrl: string, longUrl: string): Promise<UrlRecord> => {
+    const sql = 'insert into urls (url_id, long_url) values ($1,$2) returning *';
 
-    const res: QueryResult<Url> = await pool.query(sql, [shortUrl, longUrl]);
+    const res: QueryResult<UrlRecord> = await pool.query(sql, [shortUrl, longUrl]);
     return res.rows[0];
   };
 

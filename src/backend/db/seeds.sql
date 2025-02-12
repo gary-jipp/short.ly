@@ -1,5 +1,5 @@
 
-INSERT INTO urls (short_url, long_url, usage_count)
+INSERT INTO urls (url_id, long_url, usage_count)
 VALUES
   ('abc123', 'https://www.example.com/long-url-1', 50),
   ('xyz456', 'https://www.example.com/long-url-2', 120),

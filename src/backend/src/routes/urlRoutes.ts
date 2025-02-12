@@ -1,22 +1,28 @@
-import express, {Router} from "express";
+import express, {Router, Request} from "express";
 import crypto from 'crypto';
 import {Pool} from "pg";
 import urlQueries from '../database/urls';
 
 const generateShortUrlId = function(size: number): string {
-  // Generate a pretty unique shortUrl ID
+  // Generate a pretty unique url ID
   return crypto.randomBytes(3).toString('hex').toUpperCase().slice(0, size).toLowerCase();
+};
+
+const getBaseUrl = function(req: Request) {
+  return `${req.protocol}://${req.get('host')}/`;
 };
 
 // Get Express Router to use for endpoints
 const router = express.Router();
 
-export default function(pool: Pool): Router {  // inferred so not really neccesary
+export default function(pool: Pool): Router {  // Type is inferred so not really neccesary
   const {getUrls, getUrl, addUrl, updateUrl, deleteUrl} = urlQueries(pool);
 
-  router.get("/", async (_, res) => {
+  router.get("/", async (req, res) => {
+    const baseUrl = getBaseUrl(req);
+
     try {
-      const rows = await getUrls();
+      const rows = await getUrls(baseUrl);
       res.json(rows);
     } catch (error) {
       console.log(error);
@@ -24,21 +30,21 @@ export default function(pool: Pool): Router {  // inferred so not really neccesa
     }
   });
 
-  const shortUrlIdLength = Number(process.env.URL_ID_LENGTH);
-  console.log("URL_ID_LENGTH =", shortUrlIdLength);
+  const UrlIdLength = Number(process.env.URL_ID_LENGTH);
+  console.log("URL_ID_LENGTH =", UrlIdLength);
 
   router.post("/", async (req, res) => {
     const longUrl = req.body.longUrl;
 
-    let shortUrl: string;
+    let UrlId: string;
     do {
-      shortUrl = generateShortUrlId(shortUrlIdLength);
-      console.log("shortUrl", shortUrl);
-    } while (await getUrl(shortUrl));
+      UrlId = generateShortUrlId(UrlIdLength);
+      console.log("urlId", UrlId);
+    } while (await getUrl(UrlId));
 
     console.log("Add Record");
     try {
-      const row = await addUrl(shortUrl, longUrl);
+      const row = await addUrl(UrlId, longUrl);
       res.json(row);
     } catch (error) {
       console.log(error);
