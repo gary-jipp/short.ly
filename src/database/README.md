@@ -19,7 +19,7 @@ All of these can be changed with environment variables at runtime
 ## Run container
 ```
 # In network host mode for running on local dev environment
-podman run -d --replace --network=host --name=shortly-db shortly-db
+docker run -d --replace --network=host --name=shortly-db shortly-db
 
 # with mapped ports for production
 docker run -d -p8000:80  --name=shortly-dbshortly-db

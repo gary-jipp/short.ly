@@ -28,7 +28,7 @@ podman build . -t shortly-api
 Uses default environment settings (see `.env.example`)
 ```
 # In network host mode for running on local dev environment
-podman run -d --replace --network=host --name=shortly-api shortly-api
+docker run -d --replace --network=host --name=shortly-api shortly-api
 
 # with mapped ports for production
 docker run -d -p8000:80  --name=shortly-apishortly-api

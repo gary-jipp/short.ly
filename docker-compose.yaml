@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  database:
+    build:
+      context: ./src/database
+      dockerfile: Dockerfile
+    image: shortly-db
+    container_name: shortly-db
+    network_mode: host
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./src/backend
+      dockerfile: Dockerfile
+    image: shortly-api
+    container_name: shortly-api
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      - database
+
+  frontend:
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile
+    image: shortly
+    container_name: shortly
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      - backend
