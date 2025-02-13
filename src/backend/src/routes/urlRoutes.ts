@@ -11,7 +11,14 @@ const generateShortUrlId = function(size: number): string {
 };
 
 const getBaseUrl = function(req: Request) {
-  return `${req.protocol}://${req.get('host')}/`;
+  let host = req.get('host');
+
+  // handle proxy rewrites
+  if (host?.startsWith("\\")) {
+    host = host.replace(/^\\+/, '');  // Remove leading backslashes
+  }
+
+  return `${req.protocol}://${host}/`;
 };
 
 // Get Express Router to use for endpoints
