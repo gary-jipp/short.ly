@@ -41,7 +41,7 @@ export default function(pool: Pool): Router {  // Type is inferred so not really
   router.post("/", async (req, res) => {
     const longUrl = req.body.longUrl;
 
-    // Allow https, http & ftp (it can still happen!)
+    // Allow https, http & ftp (unlikely, but it can still happen!)
     if (!validator.isURL(longUrl, {require_protocol: true})) {
       console.log("Not Valid:", longUrl);
       res.status(400).json({error: "This URL is not valid"});
