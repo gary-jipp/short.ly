@@ -14,9 +14,9 @@ const getBaseUrl = function(req: Request) {
   let host = req.get('host');
 
   // handle proxy rewrites
-  if (host?.startsWith("\\")) {
-    host = host.replace(/^\\+/, '');  // Remove leading backslashes
-  }
+  // if (host?.startsWith("\\")) {
+  //   host = host.replace(/^\\+/, '');  // Remove leading backslashes
+  // }
 
   return `${req.protocol}://${host}/`;
 };
