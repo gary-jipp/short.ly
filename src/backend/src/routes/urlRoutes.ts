@@ -2,6 +2,7 @@ import express, {Router, Request} from "express";
 import crypto from 'crypto';
 import {Pool} from "pg";
 import urlQueries from '../database/urlQueries';
+import validator from 'validator';
 
 const generateShortUrlId = function(size: number): string {
   // Generate a pretty unique url ID
@@ -11,19 +12,6 @@ const generateShortUrlId = function(size: number): string {
 
 const getBaseUrl = function(req: Request) {
   return `${req.protocol}://${req.get('host')}/`;
-};
-
-// Check if URL is valid (returns 2xx)
-const isUrlValid = async function(url: string) {
-  console.log("Valid Check:", url);
-
-  try {
-    const response = await fetch(url, {method: 'GET', mode: 'no-cors'});
-    return response.ok;  // will be true if status code is 2xx
-  } catch (error) {
-    console.error('URL not valid:', url);
-    return false;
-  }
 };
 
 // Get Express Router to use for endpoints
@@ -53,16 +41,16 @@ export default function(pool: Pool): Router {  // Type is inferred so not really
   router.post("/", async (req, res) => {
     const longUrl = req.body.longUrl;
 
-    if (!await isUrlValid(longUrl)) {
+    // Allow https, http & ftp (it can still happen!)
+    if (!validator.isURL(longUrl, {require_protocol: true})) {
       console.log("Not Valid:", longUrl);
       res.status(400).json({error: "This URL is not valid"});
       return;
     }
 
-    // make sure urlId is unique
+    // make sure urlId is unique.  Could add some caching here
     let urlId: string;
     do {
-
       urlId = generateShortUrlId(UrlIdLength);
       console.log("Generate ID:", urlId);
     } while (await getUrl(urlId));
