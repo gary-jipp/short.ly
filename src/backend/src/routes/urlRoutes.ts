@@ -5,7 +5,8 @@ import urlQueries from '../database/urlQueries';
 
 const generateShortUrlId = function(size: number): string {
   // Generate a pretty unique url ID
-  return crypto.randomBytes(3).toString('hex').toUpperCase().slice(0, size).toLowerCase();
+  const id = Math.floor(Date.now()).toString(36).slice(0, 6);
+  return id;
 };
 
 const getBaseUrl = function(req: Request) {
@@ -14,6 +15,8 @@ const getBaseUrl = function(req: Request) {
 
 // Check if URL is valid (returns 2xx)
 const isUrlValid = async function(url: string) {
+  console.log("Valid Check:", url);
+
   try {
     const response = await fetch(url, {method: 'GET', mode: 'no-cors'});
     return response.ok;  // will be true if status code is 2xx
@@ -41,15 +44,17 @@ export default function(pool: Pool): Router {  // Type is inferred so not really
     }
   });
 
-  const UrlIdLength = Number(process.env.URL_ID_LENGTH);
-  console.log("URL_ID_LENGTH =", UrlIdLength || 6);
+  const UrlIdLength = Number(process.env.URL_ID_LENGTH || 6);
+  console.log("URL_ID_LENGTH =", UrlIdLength);
 
+  /**
+  * Create a new URL Record
+  */
   router.post("/", async (req, res) => {
     const longUrl = req.body.longUrl;
 
     if (!await isUrlValid(longUrl)) {
       console.log("Not Valid:", longUrl);
-
       res.status(400).json({error: "This URL is not valid"});
       return;
     }
@@ -57,31 +62,35 @@ export default function(pool: Pool): Router {  // Type is inferred so not really
     // make sure urlId is unique
     let urlId: string;
     do {
+
       urlId = generateShortUrlId(UrlIdLength);
+      console.log("Generate ID:", urlId);
     } while (await getUrl(urlId));
+
+    console.log("ID:", urlId);
 
     const baseUrl = getBaseUrl(req);
     try {
       const row = await addUrl(urlId, longUrl);
       res.json({...row, short_url: `${baseUrl}${urlId}`});
     } catch (error) {
-      console.log(error);
-      res.json(error);
+      if (error instanceof Error) {
+        console.log(error.message);
+        res.status(400).json({error: error.message}); // TODO: use lookup for better errors
+      }
     }
   });
 
+  /**
+   * Update the url_id of a record
+   */
   router.put("/:id", async (req, res) => {
     const id: number = Number(req.params.id);
-    const longUrl = req.body.longUrl;
-
-    if (!await isUrlValid(longUrl)) {
-      res.status(400).json({error: "This URL is not valid"});
-      return;
-    }
+    const urlId = req.body.urlId;
 
     try {
       // Update and return number of rows updated
-      const row = await updateUrl(id, longUrl);
+      const row = await updateUrl(id, urlId);
       if (!row) {
         res.status(404).json({error: "URL Record not found"});
         return;
@@ -89,11 +98,16 @@ export default function(pool: Pool): Router {  // Type is inferred so not really
 
       res.status(204).send();
     } catch (error) {
-      console.log(error);
-      res.json(error);
+      if (error instanceof Error) {
+        console.log(error.message);
+        res.status(400).json({error: error.message}); // TODO: use lookup for better errors
+      }
     }
   });
 
+  /**
+  * Delete URL record
+  */
   router.delete("/:id", async (req, res) => {
     const id: number = Number(req.params.id);
 
@@ -106,8 +120,10 @@ export default function(pool: Pool): Router {  // Type is inferred so not really
 
       res.status(204).send();
     } catch (error) {
-      console.log(error);
-      res.json(error);
+      if (error instanceof Error) {
+        console.log(error.message);
+        res.status(400).json({error: error.message}); // TODO: use lookup for better errors
+      }
     }
   });
 

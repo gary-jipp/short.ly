@@ -21,7 +21,7 @@ interface urlQueries {
   getUrls: (baseUrl: string) => Promise<UrlRecord[]>;
   getUrl: (urlId: string) => Promise<UrlRecord>;
   addUrl: (urlId: string, longUrl: string) => Promise<UrlRecord>;
-  updateUrl: (id: number, longUrl: string) => Promise<number>;
+  updateUrl: (id: number, urlId: string) => Promise<number>;
   incrementUrlCount: (id: number) => Promise<number>;
   deleteUrl: (id: number) => Promise<number>;
 }
@@ -32,7 +32,7 @@ export default function(pool: Pool): urlQueries {
   const getUrls = async (baseUrl: string): Promise<UrlRecord[]> => {
 
     // Prepend baseUrl to url_id to get a complete URL
-    const sql = "SELECT id, CONCAT($1::text, url_id) AS short_url, long_url, usage_count, created FROM urls order by created desc";
+    const sql = "SELECT id, url_id, CONCAT($1::text, url_id) AS short_url, long_url, usage_count, created FROM urls order by created desc";
 
     const res: QueryResult<UrlRecord> = await pool.query(sql, [baseUrl]);
     return res.rows;
@@ -54,11 +54,11 @@ export default function(pool: Pool): urlQueries {
     return res.rows[0];
   };
 
-  // Update an existing URL record's long_url by id
-  const updateUrl = async (id: number, longUrl: string): Promise<number> => {
-    const sql = 'update urls set long_url=$1 where id=$2';
+  // Update an existing URL record's url_id by id
+  const updateUrl = async (id: number, urlId: string): Promise<number> => {
+    const sql = 'update urls set url_id=$1 where id=$2';
 
-    const res: QueryResult = await pool.query(sql, [longUrl, id]);
+    const res: QueryResult = await pool.query(sql, [urlId, id]);
     return res.rowCount ?? 0; // return rows updated
   };
 
