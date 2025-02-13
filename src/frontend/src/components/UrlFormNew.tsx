@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {Typography, TextField, Button, Box, CircularProgress} from "@mui/material";
 import {useApi} from "../providers/ApiProvider";
-import ShortUrl from "./ShortUrl";
+import NewShortUrl from "./NewShortUrl";
 import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
 import useTransientState from "../hooks/useTransientState";
 
@@ -61,9 +61,9 @@ const UrlFormNew: React.FC<UrlFormNewProps> = function(props) {
       }
 
       {/* Show error if something went wrong */}
-      {error && <ShortUrl shortUrl={shortUrl} mode={"error"} title={`Error! ${error}`} />}
+      {error && <NewShortUrl shortUrl={shortUrl} mode={"error"} title={`Error! ${error}`} />}
 
-      {success && <ShortUrl shortUrl={shortUrl} mode={"success"} title="Success!  Here's your new Short URL:" />}
+      {success && <NewShortUrl shortUrl={shortUrl} mode={"success"} title="Success!  Here's your new Short URL:" />}
 
       {/* Close button to dismiss the modal */}
       <Button variant="outlined" color="primary" fullWidth onClick={props.onCancel} sx={{mt: 2}}>

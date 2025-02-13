@@ -2,13 +2,13 @@ import {useState} from "react";
 import {Typography, Box, Link, IconButton, Alert} from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
-interface UrlRecordEditProps {
+interface NewShortUrlProps {
   title: string;
   shortUrl: string;
   mode: "error" | "info" | "success";
 }
 
-const ShortUrl: React.FC<UrlRecordEditProps> = function(props) {
+const NewShortUrl: React.FC<NewShortUrlProps> = function(props) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -44,4 +44,4 @@ const ShortUrl: React.FC<UrlRecordEditProps> = function(props) {
   );
 };
 
-export default ShortUrl;
+export default NewShortUrl;
