@@ -32,8 +32,8 @@ export default function(pool: Pool): Router {  // Type is inferred so not really
     }
   });
 
-  const UrlIdLength = Number(process.env.URL_ID_LENGTH || 6);
-  console.log("URL_ID_LENGTH =", UrlIdLength);
+  const urlIdLength = Number(process.env.URL_ID_LENGTH || 6);
+  console.log("URL_ID_LENGTH =", urlIdLength);
 
   /**
   * Create a new URL Record
@@ -51,7 +51,7 @@ export default function(pool: Pool): Router {  // Type is inferred so not really
     // make sure urlId is unique.  Could add some caching here
     let urlId: string;
     do {
-      urlId = generateShortUrlId(UrlIdLength);
+      urlId = generateShortUrlId(urlIdLength);
       console.log("Generate ID:", urlId);
     } while (await getUrl(urlId));
 
