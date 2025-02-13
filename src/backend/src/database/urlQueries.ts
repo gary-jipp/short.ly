@@ -22,6 +22,7 @@ interface urlQueries {
   getUrl: (urlId: string) => Promise<UrlRecord>;
   addUrl: (urlId: string, longUrl: string) => Promise<UrlRecord>;
   updateUrl: (id: number, longUrl: string) => Promise<number>;
+  incrementUrlCount: (id: number) => Promise<number>;
   deleteUrl: (id: number) => Promise<number>;
 }
 
@@ -61,6 +62,14 @@ export default function(pool: Pool): urlQueries {
     return res.rowCount ?? 0; // return rows updated
   };
 
+  // Update an existing URL record's long_url by id
+  const incrementUrlCount = async (id: number): Promise<number> => {
+    const sql = 'UPDATE urls SET usage_count = usage_count + 1 WHERE id = $1';
+
+    const res: QueryResult = await pool.query(sql, [id]);
+    return res.rowCount ?? 0; // return rows updated
+  };
+
   // Delete a URL record by id
   const deleteUrl = async (id: number): Promise<number> => {
     const sql = 'delete from urls where id=$1';
@@ -69,5 +78,5 @@ export default function(pool: Pool): urlQueries {
     return res.rowCount ?? 0; // return rows updated
   };
 
-  return {getUrls, getUrl, addUrl, updateUrl, deleteUrl};
+  return {getUrls, getUrl, addUrl, updateUrl, incrementUrlCount, deleteUrl};
 };
