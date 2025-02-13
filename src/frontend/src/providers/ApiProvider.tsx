@@ -35,7 +35,7 @@ const ApiProvider: React.FC<ApiProviderProps> = function(props) {
     axios.get<ApiUrlRecord[]>("/api/urls")
       .then(res => {
         // Map api records to app records & save
-        const records: UrlRecord[] = res.data.map ? res.data.map(r => ({id: r.id, urlId: r.url_id, shortUrl: r.short_url , longUrl: r.long_url, usageCount: r.usage_count, created: r.created})) : [];
+        const records: UrlRecord[] = res.data.map ? res.data.map(r => ({id: r.id, urlId: r.url_id, shortUrl: r.short_url, longUrl: r.long_url, usageCount: r.usage_count, created: r.created})) : [];
         setUrlRecords(records);
       })
       .catch(err => {

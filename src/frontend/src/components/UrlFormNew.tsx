@@ -27,7 +27,7 @@ const UrlFormNew: React.FC<UrlFormNewProps> = function(props) {
     }
 
     // Add record & set shortUrl to enable render
-    const record: UrlRecord = {longUrl, shortUrl};
+    const record: UrlRecord = {longUrl, shortUrl, urlId: ""};
     addUrlRecord(record)
       .then(res => {
         setShortUrl(res.shortUrl ? res.shortUrl : "");

@@ -40,3 +40,13 @@ Refer to the `README.md` in each of the application directories
 - backend
 - database
 - frontend
+
+### Development Notes / TODO's
+- UI needs work.
+- should save record ID not record on click
+- some types are incomplete
+- Promise code is inconsistent between FE & BE
+- use more custom hooks for component logic
+- Split conditonal rendering UI into child components
+- using props instead of destructure on purpose so can use for teaching guide later
+- Still not bad for only 2 days start-finish
