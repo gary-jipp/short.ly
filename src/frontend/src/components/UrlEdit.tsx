@@ -29,7 +29,6 @@ const UrlEdit: React.FC<UrlEditProps> = function(props) {
 
     // Replace urlId & shorturl in record & save
     const shortUrl = record.shortUrl?.replace(/\/[^/]+$/, `/${urlId}`);
-    console.log({...props.record, urlId});
 
     updateUrlRecord({...props.record, urlId, shortUrl})
       .then(() => {
