@@ -1,10 +1,8 @@
 import {useState} from "react";
-import {Typography, TextField, Button, Box, Link, IconButton, CircularProgress, Alert} from "@mui/material";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import {Typography, TextField, Button, Box, CircularProgress, Alert} from "@mui/material";
 import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
 import {useApi} from "../providers/ApiProvider";
 import useTransientState from "../hooks/useTransientState";
-import UrlShow from "./UrlShow";
 
 interface UrlEditProps {
   record: UrlRecord;
