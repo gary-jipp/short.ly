@@ -11,7 +11,7 @@ Simple URL shortener App.  React front end, Node-express & Postgress back end
 - Users can add, delete and modify Short URL's
 - Users can easily copy the shortURL to the clipboard by clicking the copy button
 - If an invalid Short Url is accessed, a 404 Not Found Page is displayed
-- The Visits count is displayed for each Short URL
+- The visits count is displayed for each Short URL
 - There is no auth or accounts.  (Note: auth should be external. eg: keycloak)
 - The Application is deployed as configurable Docker containers.
 
