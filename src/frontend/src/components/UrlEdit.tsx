@@ -8,7 +8,7 @@ import UrlShow from "./UrlShow";
 
 interface UrlEditProps {
   record: UrlRecord;
-  cancelUpdate: () => void;
+  onCancelEdit: () => void;
 }
 
 const UrlEdit: React.FC<UrlEditProps> = function(props) {
@@ -44,7 +44,6 @@ const UrlEdit: React.FC<UrlEditProps> = function(props) {
       .finally(() => {
         setPending(false);
       });
-
   };
 
 
@@ -56,7 +55,7 @@ const UrlEdit: React.FC<UrlEditProps> = function(props) {
 
       {/* Text Field for the URL Code */}
       <TextField fullWidth label="URL Code" value={urlId}
-        onChange={(e) => setUrlId(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ""))} margin="normal" variant="outlined" disabled={!update} />
+        onChange={(e) => setUrlId(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ""))} margin="normal" variant="outlined" />
 
       <Box sx={{display: "flex", alignItems: "center", mt: 1}}>
 
@@ -70,7 +69,7 @@ const UrlEdit: React.FC<UrlEditProps> = function(props) {
 
       </Box>
 
-      {!success && <Button variant="outlined" color="primary" fullWidth sx={{mt: 2}} onClick={props.cancelUpdate}>
+      {!success && <Button variant="outlined" color="primary" fullWidth sx={{mt: 2}} onClick={props.onCancelEdit}>
         Cancel
       </Button>
       }

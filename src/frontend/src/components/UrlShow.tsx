@@ -7,7 +7,7 @@ import useTransientState from "../hooks/useTransientState";
 
 interface UrlShowProps {
   record: UrlRecord;
-  onUpdate: () => void;  // User Clicks the Update Button
+  onEdit: () => void;  // User Clicks the Update Button
 }
 
 const UrlShow: React.FC<UrlShowProps> = function(props) {
@@ -37,8 +37,8 @@ const UrlShow: React.FC<UrlShowProps> = function(props) {
       </Box>
       {copied && (<Typography color="success.main">Copied to clipboard!</Typography>)}
 
-      <Button variant="outlined" color="primary" fullWidth sx={{mt: 2}} onClick={props.onUpdate}>
-        Update
+      <Button variant="outlined" color="primary" fullWidth sx={{mt: 2}} onClick={props.onEdit}>
+        Edit
       </Button>
     </>
   );

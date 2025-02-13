@@ -1,10 +1,8 @@
 import {useState} from "react";
-import {Typography, TextField, Button, Box, Link, IconButton, CircularProgress, Alert} from "@mui/material";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import {TextField, Button, Box} from "@mui/material";
 import {UrlRecord} from "../types/UrlRecord"; // TODO: Should use @types for this
-import {useApi} from "../providers/ApiProvider";
-import useTransientState from "../hooks/useTransientState";
 import UrlShow from "./UrlShow";
+import UrlEdit from "./UrlEdit";
 
 interface UrlRecordShowProps {
   record: UrlRecord;
@@ -13,86 +11,18 @@ interface UrlRecordShowProps {
 
 const UrlFormShow: React.FC<UrlRecordShowProps> = function(props) {
   const record: UrlRecord = props.record;
-
-  const [urlId, setUrlId] = useState(record?.urlId || "");    // Url ID  field
-  const [update, setUpdate] = useState(false);          // Toggle to allow editing
-  const [success, setSuccess] = useState(false);
-  const [pending, setPending] = useState<boolean>(false);
-  const [error, setError] = useTransientState<string>("", 2000);
-
-  const {updateUrlRecord} = useApi(); // API provider
-
-  // Enable Updating
-  const startUpdate = function() {
-    setError("");
-    setUpdate(true);
-    setSuccess(false);
-  };
-
-  // Add using context function
-  const saveRecord = function() {
-    // crude length check
-    if (urlId.length < 6 || urlId.length > 20) {
-      setError("Your URL Code must be between 6-20 chars");
-      setUrlId(record.urlId);
-      return;
-    }
-
-    // Replace urlId & shorturl in record & save
-    const shortUrl = record.shortUrl?.replace(/\/[^/]+$/, `/${urlId}`);
-    console.log({...props.record, urlId});
-
-    updateUrlRecord({...props.record, urlId, shortUrl})
-      .then(() => {
-        setSuccess(true);
-      })
-      .catch(err => {
-        const msg = err.response?.data?.error || err.message;
-        setError(`Unable to save this URL - ${msg}`);
-      })
-      .finally(() => {
-        setPending(false);
-      });
-
-  };
-
+  const [edit, setEdit] = useState(false);          // Toggle to allow editing
 
   return (
     <Box maxWidth="sm" sx={{mt: 4, p: 4, border: "1px solid #ddd", borderRadius: 2}}    >
 
       <TextField fullWidth label="URL" value={props.record?.longUrl} margin="normal" variant="outlined" disabled />
 
-      {!update && <UrlShow record={record} onUpdate={startUpdate} />}
+      {/* Display record read-only */}
+      {!edit && <UrlShow record={record} onEdit={() => setEdit(true)} />}
 
-      {update && (
-        <>
-          <Typography variant="subtitle1" color="info" gutterBottom sx={{fontWeight: "bold"}}>
-            Edit your URL Code (max 20 characters)
-          </Typography>
-
-          {/* Text Field for the URL Code */}
-          <TextField fullWidth label="URL Code" value={urlId}
-            onChange={(e) => setUrlId(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ""))} margin="normal" variant="outlined" disabled={!update} />
-
-          <Box sx={{display: "flex", alignItems: "center", mt: 1}}>
-
-
-            {/* Display pending, error, sucess or Save Button */}
-            {pending ? (
-              <Button variant="outlined" color="primary" fullWidth disabled><CircularProgress size={24} />
-              </Button>)
-              : error ? (<Alert severity="error">{error}</Alert>)
-                : success ? (<Alert severity="success">Saved successfully!</Alert>)
-                  : (<Button variant="outlined" color="primary" fullWidth onClick={saveRecord}>Save</Button>)}
-
-          </Box>
-
-          {!success && <Button variant="outlined" color="primary" fullWidth sx={{mt: 2}} onClick={() => setUpdate(false)}>
-            Cancel
-          </Button>
-          }
-        </>
-      )}
+      {/* Show record Edit Controls */}
+      {edit && <UrlEdit record={record} onCancelEdit={() => setEdit(false)} />}
 
       <Button variant="contained" color="primary" fullWidth sx={{mt: 2}} onClick={props.onClose}>
         Close
